@@ -7,49 +7,37 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>intellispaces-annotation-processor</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>intellispaces-annotation-processor-root</artifactId>
+    <packaging>pom</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <modules>
+        <module>intellispaces-annotation-processor-model</module>
+        <module>intellispaces-annotation-processor</module>
+    </modules>
 
-    <dependencies>
-        <!-- Intellispaces -->
-        <dependency>
-            <groupId>intellispaces</groupId>
-            <artifactId>intellispaces-commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>intellispaces</groupId>
-            <artifactId>intellispaces-javastatements</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>intellispaces</groupId>
-            <artifactId>intellispaces-template-engine</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>com.google.testing.compile</groupId>
-            <artifactId>compile-testing</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Intellispaces -->
+                <dependency>
+                    <groupId>intellispaces</groupId>
+                    <artifactId>intellispaces-annotation-processor-model</artifactId>
+                    <version>0.0.1-SNAPSHOT</version>
+                </dependency>
+            <dependency>
+                <groupId>intellispaces</groupId>
+                <artifactId>intellispaces-javastatements</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>intellispaces</groupId>
+                <artifactId>intellispaces-template-engine</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>intellispaces</groupId>
+                <artifactId>intellispaces-commons</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
