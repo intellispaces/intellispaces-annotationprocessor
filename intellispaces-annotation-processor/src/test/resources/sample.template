@@ -1,7 +1,0 @@
-package intellispaces.annotationprocessor;
-
-/**
- * This class generated from class {{$SOURCE_CLASS_NAME}}.
- */
-public interface GeneratedSample {
-}

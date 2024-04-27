@@ -3,16 +3,16 @@
 
     <parent>
         <groupId>intellispaces</groupId>
-        <artifactId>intellispaces-parent-pom</artifactId>
+        <artifactId>intellispacesframework-parent-pom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>intellispaces-annotation-processor-root</artifactId>
+    <artifactId>intellispacesframework-annotation-processor-root</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>intellispaces-annotation-processor-model</module>
-        <module>intellispaces-annotation-processor</module>
+        <module>intellispacesframework-annotation-processor-model</module>
+        <module>intellispacesframework-annotation-processor</module>
     </modules>
 
     <dependencyManagement>
@@ -20,22 +20,22 @@
             <!-- Intellispaces -->
                 <dependency>
                     <groupId>intellispaces</groupId>
-                    <artifactId>intellispaces-annotation-processor-model</artifactId>
+                    <artifactId>intellispacesframework-annotation-processor-model</artifactId>
                     <version>0.0.1-SNAPSHOT</version>
                 </dependency>
             <dependency>
                 <groupId>intellispaces</groupId>
-                <artifactId>intellispaces-javastatements</artifactId>
+                <artifactId>intellispacesframework-javastatements</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>intellispaces</groupId>
-                <artifactId>intellispaces-template-engine</artifactId>
+                <artifactId>intellispacesframework-template-engine</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>intellispaces</groupId>
-                <artifactId>intellispaces-commons</artifactId>
+                <artifactId>intellispacesframework-commons</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
