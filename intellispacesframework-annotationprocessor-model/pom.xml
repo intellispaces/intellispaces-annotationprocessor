@@ -3,11 +3,11 @@
 
     <parent>
         <groupId>intellispaces</groupId>
-        <artifactId>intellispacesframework-annotation-processor-root</artifactId>
+        <artifactId>intellispacesframework-annotationprocessor-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>intellispacesframework-annotation-processor-model</artifactId>
+    <artifactId>intellispacesframework-annotationprocessor-model</artifactId>
     <packaging>jar</packaging>
 	
     <build>

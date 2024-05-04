@@ -7,12 +7,12 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>intellispacesframework-annotation-processor-root</artifactId>
+    <artifactId>intellispacesframework-annotationprocessor-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>intellispacesframework-annotation-processor-model</module>
-        <module>intellispacesframework-annotation-processor</module>
+        <module>intellispacesframework-annotationprocessor-model</module>
+        <module>intellispacesframework-annotationprocessor</module>
     </modules>
 
     <dependencyManagement>
@@ -20,7 +20,7 @@
             <!-- Intellispaces -->
                 <dependency>
                     <groupId>intellispaces</groupId>
-                    <artifactId>intellispacesframework-annotation-processor-model</artifactId>
+                    <artifactId>intellispacesframework-annotationprocessor-model</artifactId>
                     <version>0.0.1-SNAPSHOT</version>
                 </dependency>
             <dependency>
@@ -30,7 +30,7 @@
             </dependency>
             <dependency>
                 <groupId>intellispaces</groupId>
-                <artifactId>intellispacesframework-template-engine</artifactId>
+                <artifactId>intellispacesframework-templateengine</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

@@ -1,6 +1,6 @@
 package tech.intellispacesframework.annotationprocessor.artifact.sketch;
 
-import tech.intellispacesframework.commons.classes.ClassFunctions;
+import tech.intellispacesframework.commons.type.TypeFunctions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +51,7 @@ public class JavaArtifactSketch {
   }
 
   public boolean isDuplicated(String canonicalName) {
-    String simpleName = ClassFunctions.getSimpleName(canonicalName);
+    String simpleName = TypeFunctions.getSimpleName(canonicalName);
     return imports.stream()
         .anyMatch(importedName -> importedName.endsWith("." + simpleName) && !importedName.equals(canonicalName));
   }

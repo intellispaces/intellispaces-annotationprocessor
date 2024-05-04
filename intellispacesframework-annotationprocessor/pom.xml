@@ -3,11 +3,11 @@
 
     <parent>
         <groupId>intellispaces</groupId>
-        <artifactId>intellispacesframework-annotation-processor-root</artifactId>
+        <artifactId>intellispacesframework-annotationprocessor-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>intellispacesframework-annotation-processor</artifactId>
+    <artifactId>intellispacesframework-annotationprocessor</artifactId>
     <packaging>jar</packaging>
 	
     <build>
@@ -31,7 +31,7 @@
         <!-- Intellispaces -->
         <dependency>
             <groupId>intellispaces</groupId>
-            <artifactId>intellispacesframework-annotation-processor-model</artifactId>
+            <artifactId>intellispacesframework-annotationprocessor-model</artifactId>
         </dependency>
         <dependency>
             <groupId>intellispaces</groupId>
@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>intellispaces</groupId>
-            <artifactId>intellispacesframework-template-engine</artifactId>
+            <artifactId>intellispacesframework-templateengine</artifactId>
         </dependency>
         <dependency>
             <groupId>intellispaces</groupId>
