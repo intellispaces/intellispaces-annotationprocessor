@@ -19,7 +19,7 @@ public class AnnotatedTypeProcessorSample extends AnnotatedTypeProcessor {
   }
 
   @Override
-  protected List<ArtifactMaker> getArtifactMakers(CustomType customType) {
+  protected List<ArtifactMaker> getArtifactMakers(CustomType annotatedType) {
     return List.of(new ArtifactMakerSample());
   }
 }

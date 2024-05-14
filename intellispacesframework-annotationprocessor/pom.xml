@@ -28,7 +28,7 @@
     </build>
 
     <dependencies>
-        <!-- Intellispaces -->
+        <!-- Intellispaces framework -->
         <dependency>
             <groupId>intellispaces</groupId>
             <artifactId>intellispacesframework-annotationprocessor-model</artifactId>

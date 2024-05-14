@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.Set;
 
 public class JavaArtifactSketch {
-  private final String canonicalName;
+  private String canonicalName;
   private final Set<String> imports = new HashSet<>();
   private final Set<String> staticImports = new HashSet<>();
   private final List<String> javaDocLines = new ArrayList<>();
 
-  public JavaArtifactSketch(String canonicalName) {
+
+  public void canonicalName(String canonicalName) {
     this.canonicalName = canonicalName;
   }
 
@@ -36,6 +37,18 @@ public class JavaArtifactSketch {
 
   public void addJavaDocLine(String line) {
     javaDocLines.add(line);
+  }
+
+  public String canonicalName() {
+    return canonicalName;
+  }
+
+  public String simpleName() {
+    return TypeFunctions.getSimpleName(canonicalName);
+  }
+
+  public String packageName() {
+    return TypeFunctions.getPackageName(canonicalName);
   }
 
   public List<String> getImports() {
