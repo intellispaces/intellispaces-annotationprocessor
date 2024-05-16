@@ -56,10 +56,10 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
   }
 
   @Override
-  public boolean process(Set<? extends TypeElement> annotatedTypeElements, RoundEnvironment roundEnv) {
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(annotation)) {
       if (!applicableKinds.contains(annotatedElement.getKind())) {
-        return true;
+        continue;
       }
 
       TypeElement typeElement = null;
@@ -67,7 +67,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
         typeElement = (TypeElement) annotatedElement;
         CustomType annotatedType = JavaStatements.customTypeStatement(typeElement);
         if (!isApplicable(annotatedType)) {
-          return true;
+          continue;
         }
         List<ArtifactMaker> makers = getArtifactMakers(annotatedType);
         for (ArtifactMaker maker : makers) {
