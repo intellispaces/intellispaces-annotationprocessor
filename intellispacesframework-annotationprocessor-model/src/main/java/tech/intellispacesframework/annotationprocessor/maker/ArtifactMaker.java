@@ -1,11 +1,10 @@
 package tech.intellispacesframework.annotationprocessor.maker;
 
 import tech.intellispacesframework.annotationprocessor.artifact.Artifact;
-import tech.intellispacesframework.javastatements.statement.custom.CustomType;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface ArtifactMaker {
 
-  List<Artifact> make(CustomType annotatedType) throws Exception;
+  Optional<Artifact> make() throws Exception;
 }

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Tests for {@link AnnotatedTypeProcessor}.
  */
-public class AnnotationProcessorTest {
+public class AnnotatedTypeProcessorTest {
 
   @Test
   public void test() {
@@ -30,6 +30,6 @@ public class AnnotationProcessorTest {
     CompilationSubject.assertThat(compilation)
         .generatedSourceFile("intellispaces.annotationprocessor.GeneratedSample")
         .contentsAsString(StandardCharsets.UTF_8)
-        .isEqualTo(ResourceFunctions.readResourceAsStringForce(AnnotationProcessorTest.class, "/GeneratedSample.java"));
+        .isEqualTo(ResourceFunctions.readResourceAsStringForce(AnnotatedTypeProcessorTest.class, "/GeneratedSample.java"));
   }
 }

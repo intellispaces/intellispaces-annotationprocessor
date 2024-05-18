@@ -21,8 +21,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Annotation processor of annotated types (annotated classes, interfaces, records, enums and annotations).
+ */
 public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
   private final Class<? extends Annotation> annotation;
   private final Set<ElementKind> applicableKinds;
@@ -41,9 +45,9 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     this.applicableKinds = applicableKinds;
   }
 
-  protected abstract boolean isApplicable(CustomType annotatedType);
+  protected abstract boolean isApplicable(CustomType annotatedStatement);
 
-  protected abstract List<ArtifactMaker> getArtifactMakers(CustomType customType);
+  protected abstract List<ArtifactMaker> getArtifactMakers(CustomType annotatedStatement);
 
   @Override
   public SourceVersion getSupportedSourceVersion() {
@@ -61,26 +65,29 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
       if (!applicableKinds.contains(annotatedElement.getKind())) {
         continue;
       }
-
-      TypeElement typeElement = null;
-      try {
-        typeElement = (TypeElement) annotatedElement;
-        CustomType annotatedType = JavaStatements.customTypeStatement(typeElement);
-        if (!isApplicable(annotatedType)) {
-          continue;
-        }
-        List<ArtifactMaker> makers = getArtifactMakers(annotatedType);
-        for (ArtifactMaker maker : makers) {
-          List<Artifact> artifacts = maker.make(annotatedType);
-          for (Artifact artifact : artifacts) {
-            writeArtifact(artifact);
-          }
-        }
-      } catch (Exception e) {
-        logError(typeElement, e);
-      }
+      processCustomType((TypeElement) annotatedElement);
     }
     return true;
+  }
+
+  private void processCustomType(TypeElement annotatedElement) {
+    TypeElement typeElement = null;
+    try {
+      typeElement = annotatedElement;
+      CustomType annotatedType = JavaStatements.customTypeStatement(typeElement);
+      if (!isApplicable(annotatedType)) {
+        return;
+      }
+      List<ArtifactMaker> makers = getArtifactMakers(annotatedType);
+      for (ArtifactMaker maker : makers) {
+        Optional<Artifact> artifact = maker.make();
+        if (artifact.isPresent()) {
+          writeArtifact(artifact.get());
+        }
+      }
+    } catch (Exception e) {
+      logError(typeElement, e);
+    }
   }
 
   private void writeArtifact(Artifact artifact) throws IOException {

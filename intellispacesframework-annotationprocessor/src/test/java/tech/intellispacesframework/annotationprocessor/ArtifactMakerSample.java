@@ -9,6 +9,10 @@ public class ArtifactMakerSample extends TemplateBasedJavaArtifactMaker {
   private String sourceClassName;
   private String generatedClassName;
 
+  public ArtifactMakerSample(CustomType annotatedType) {
+    super(annotatedType);
+  }
+
   @Override
   protected String templateName() {
     return "/sample.template";
@@ -24,7 +28,7 @@ public class ArtifactMakerSample extends TemplateBasedJavaArtifactMaker {
   }
 
   @Override
-  protected boolean analyze(CustomType annotatedType) {
+  protected boolean analyze() {
     sourceClassName = annotatedType.canonicalName();
     generatedClassName = annotatedType.packageName() + ".GeneratedSample";
     return true;

@@ -8,13 +8,18 @@ import tech.intellispacesframework.javastatements.statement.custom.CustomType;
 import tech.intellispacesframework.templateengine.TemplateEngine;
 import tech.intellispacesframework.templateengine.template.Template;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * One-off template based Java class artifact maker.
  */
 public abstract class TemplateBasedJavaArtifactMaker implements ArtifactMaker {
+  protected final CustomType annotatedType;
+
+  public TemplateBasedJavaArtifactMaker(CustomType annotatedType) {
+    this.annotatedType = annotatedType;
+  }
 
   /**
    * Returns template name.
@@ -34,15 +39,15 @@ public abstract class TemplateBasedJavaArtifactMaker implements ArtifactMaker {
   /**
    * Analyzes type and returns <code>true</code> if artifact should be created or <code>false</code> otherwise.
    */
-  protected abstract boolean analyze(CustomType annotatedType);
+  protected abstract boolean analyze();
 
   @Override
-  public List<Artifact> make(CustomType annotatedType) throws Exception {
-    if (!analyze(annotatedType)) {
-      return List.of();
+  public Optional<Artifact> make() throws Exception {
+    if (!analyze()) {
+      return Optional.empty();
     }
     String source = synthesize();
-    return List.of(new JavaArtifactImpl(canonicalName(), source));
+    return Optional.of(new JavaArtifactImpl(canonicalName(), source));
   }
 
   private String synthesize() throws Exception {
