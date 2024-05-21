@@ -80,7 +80,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
       }
       List<ArtifactMaker> makers = getArtifactMakers(annotatedType);
       for (ArtifactMaker maker : makers) {
-        Optional<Artifact> artifact = maker.make();
+        Optional<Artifact> artifact = maker.makeArtifact();
         if (artifact.isPresent()) {
           writeArtifact(artifact.get());
         }
@@ -107,7 +107,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
   }
 
   protected void logError(Element element, String message, Object... messageArguments) {
-    var errorMessage = "ERROR. Failed to auto generate an artifact for element " + getElementName(element) +
+    var errorMessage = "ERROR. Failed to auto generate an artifact for class " + getElementName(element) +
         " marked with an annotation @" +  annotation.getSimpleName() + ". " +
         message.formatted(messageArguments);
     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, errorMessage);

@@ -28,7 +28,7 @@ public class ArtifactMakerSample extends TemplateBasedJavaArtifactMaker {
   }
 
   @Override
-  protected boolean analyze() {
+  protected boolean analyzeAnnotatedType() {
     sourceClassName = annotatedType.canonicalName();
     generatedClassName = annotatedType.packageName() + ".GeneratedSample";
     return true;

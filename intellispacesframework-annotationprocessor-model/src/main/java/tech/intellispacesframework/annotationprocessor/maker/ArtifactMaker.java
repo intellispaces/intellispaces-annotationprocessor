@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ArtifactMaker {
 
-  Optional<Artifact> make() throws Exception;
+  Optional<Artifact> makeArtifact() throws Exception;
 }

@@ -19,6 +19,10 @@ public class JavaArtifactSketch {
     this.canonicalName = canonicalName;
   }
 
+  public Set<String> imports() {
+    return imports;
+  }
+
   public void addImport(Class<?> aClass) {
     imports.add(aClass.getName());
   }

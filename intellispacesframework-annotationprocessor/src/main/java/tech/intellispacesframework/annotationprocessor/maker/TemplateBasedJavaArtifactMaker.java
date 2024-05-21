@@ -39,18 +39,18 @@ public abstract class TemplateBasedJavaArtifactMaker implements ArtifactMaker {
   /**
    * Analyzes type and returns <code>true</code> if artifact should be created or <code>false</code> otherwise.
    */
-  protected abstract boolean analyze();
+  protected abstract boolean analyzeAnnotatedType();
 
   @Override
-  public Optional<Artifact> make() throws Exception {
-    if (!analyze()) {
+  public Optional<Artifact> makeArtifact() throws Exception {
+    if (!analyzeAnnotatedType()) {
       return Optional.empty();
     }
-    String source = synthesize();
+    String source = synthesizeArtifact();
     return Optional.of(new JavaArtifactImpl(canonicalName(), source));
   }
 
-  private String synthesize() throws Exception {
+  private String synthesizeArtifact() throws Exception {
     String templateSource = ResourceFunctions.readResourceAsString(TemplateBasedJavaArtifactMaker.class, templateName()).orElseThrow(
         () -> UnexpectedViolationException.withMessage("Template for generate artifact is not found. Template name {}", templateName())
     );
