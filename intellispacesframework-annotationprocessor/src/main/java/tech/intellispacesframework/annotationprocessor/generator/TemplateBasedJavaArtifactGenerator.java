@@ -1,4 +1,4 @@
-package tech.intellispacesframework.annotationprocessor.maker;
+package tech.intellispacesframework.annotationprocessor.generator;
 
 import tech.intellispacesframework.annotationprocessor.artifact.Artifact;
 import tech.intellispacesframework.annotationprocessor.artifact.JavaArtifactImpl;
@@ -14,10 +14,10 @@ import java.util.Optional;
 /**
  * One-off template based Java class artifact maker.
  */
-public abstract class TemplateBasedJavaArtifactMaker implements ArtifactMaker {
+public abstract class TemplateBasedJavaArtifactGenerator implements ArtifactGenerator {
   protected final CustomType annotatedType;
 
-  public TemplateBasedJavaArtifactMaker(CustomType annotatedType) {
+  public TemplateBasedJavaArtifactGenerator(CustomType annotatedType) {
     this.annotatedType = annotatedType;
   }
 
@@ -42,7 +42,7 @@ public abstract class TemplateBasedJavaArtifactMaker implements ArtifactMaker {
   protected abstract boolean analyzeAnnotatedType();
 
   @Override
-  public Optional<Artifact> makeArtifact() throws Exception {
+  public Optional<Artifact> generate() throws Exception {
     if (!analyzeAnnotatedType()) {
       return Optional.empty();
     }
@@ -51,7 +51,7 @@ public abstract class TemplateBasedJavaArtifactMaker implements ArtifactMaker {
   }
 
   private String synthesizeArtifact() throws Exception {
-    String templateSource = ResourceFunctions.readResourceAsString(TemplateBasedJavaArtifactMaker.class, templateName()).orElseThrow(
+    String templateSource = ResourceFunctions.readResourceAsString(TemplateBasedJavaArtifactGenerator.class, templateName()).orElseThrow(
         () -> UnexpectedViolationException.withMessage("Template for generate artifact is not found. Template name {}", templateName())
     );
     Template template = TemplateEngine.parseTemplate(templateSource);

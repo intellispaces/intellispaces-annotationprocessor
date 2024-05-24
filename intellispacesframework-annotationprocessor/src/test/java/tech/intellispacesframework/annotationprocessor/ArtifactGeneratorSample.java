@@ -1,15 +1,15 @@
 package tech.intellispacesframework.annotationprocessor;
 
-import tech.intellispacesframework.annotationprocessor.maker.TemplateBasedJavaArtifactMaker;
+import tech.intellispacesframework.annotationprocessor.generator.TemplateBasedJavaArtifactGenerator;
 import tech.intellispacesframework.javastatements.statement.custom.CustomType;
 
 import java.util.Map;
 
-public class ArtifactMakerSample extends TemplateBasedJavaArtifactMaker {
+public class ArtifactGeneratorSample extends TemplateBasedJavaArtifactGenerator {
   private String sourceClassName;
   private String generatedClassName;
 
-  public ArtifactMakerSample(CustomType annotatedType) {
+  public ArtifactGeneratorSample(CustomType annotatedType) {
     super(annotatedType);
   }
 

@@ -3,7 +3,7 @@ package tech.intellispacesframework.annotationprocessor;
 import tech.intellispacesframework.annotationprocessor.artifact.Artifact;
 import tech.intellispacesframework.annotationprocessor.artifact.ArtifactTypes;
 import tech.intellispacesframework.annotationprocessor.artifact.JavaArtifact;
-import tech.intellispacesframework.annotationprocessor.maker.ArtifactMaker;
+import tech.intellispacesframework.annotationprocessor.generator.ArtifactGenerator;
 import tech.intellispacesframework.commons.exception.UnexpectedViolationException;
 import tech.intellispacesframework.javastatements.JavaStatements;
 import tech.intellispacesframework.javastatements.statement.custom.CustomType;
@@ -47,7 +47,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
   protected abstract boolean isApplicable(CustomType annotatedStatement);
 
-  protected abstract List<ArtifactMaker> getArtifactMakers(CustomType annotatedStatement);
+  protected abstract List<ArtifactGenerator> makeArtifactGenerators(CustomType annotatedStatement);
 
   @Override
   public SourceVersion getSupportedSourceVersion() {
@@ -78,9 +78,9 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
       if (!isApplicable(annotatedType)) {
         return;
       }
-      List<ArtifactMaker> makers = getArtifactMakers(annotatedType);
-      for (ArtifactMaker maker : makers) {
-        Optional<Artifact> artifact = maker.makeArtifact();
+      List<ArtifactGenerator> generators = makeArtifactGenerators(annotatedType);
+      for (ArtifactGenerator generator : generators) {
+        Optional<Artifact> artifact = generator.generate();
         if (artifact.isPresent()) {
           writeArtifact(artifact.get());
         }

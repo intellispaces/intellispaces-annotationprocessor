@@ -1,6 +1,6 @@
 package tech.intellispacesframework.annotationprocessor;
 
-import tech.intellispacesframework.annotationprocessor.maker.ArtifactMaker;
+import tech.intellispacesframework.annotationprocessor.generator.ArtifactGenerator;
 import tech.intellispacesframework.javastatements.statement.custom.CustomType;
 
 import javax.lang.model.element.ElementKind;
@@ -19,7 +19,7 @@ public class AnnotatedTypeProcessorSample extends AnnotatedTypeProcessor {
   }
 
   @Override
-  protected List<ArtifactMaker> getArtifactMakers(CustomType annotatedType) {
-    return List.of(new ArtifactMakerSample(annotatedType));
+  protected List<ArtifactGenerator> makeArtifactGenerators(CustomType annotatedType) {
+    return List.of(new ArtifactGeneratorSample(annotatedType));
   }
 }
