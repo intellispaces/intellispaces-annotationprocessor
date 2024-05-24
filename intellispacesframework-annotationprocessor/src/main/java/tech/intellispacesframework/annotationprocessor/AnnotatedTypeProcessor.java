@@ -9,6 +9,8 @@ import tech.intellispacesframework.javastatements.JavaStatements;
 import tech.intellispacesframework.javastatements.statement.custom.CustomType;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.FilerException;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -82,7 +84,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
       for (ArtifactGenerator generator : generators) {
         Optional<Artifact> artifact = generator.generate();
         if (artifact.isPresent()) {
-          writeArtifact(artifact.get());
+          writeArtifact(annotatedElement, artifact.get());
         }
       }
     } catch (Exception e) {
@@ -90,27 +92,42 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     }
   }
 
-  private void writeArtifact(Artifact artifact) throws IOException {
+  private void writeArtifact(TypeElement annotatedElement, Artifact artifact) throws IOException {
     if (artifact.type() == ArtifactTypes.JavaFile) {
-      writeJavaArtifact(artifact.asJavaArtifact().orElseThrow());
+      writeJavaArtifact(annotatedElement, artifact.asJavaArtifact().orElseThrow());
     } else {
       throw UnexpectedViolationException.withMessage("Unsupported artifact type " + artifact.type().name());
     }
   }
 
-  private void writeJavaArtifact(JavaArtifact artifact) throws IOException {
+  private void writeJavaArtifact(TypeElement annotatedElement, JavaArtifact artifact) throws IOException {
     processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Write auto generated Java file " + artifact.canonicalName());
-    JavaFileObject file = processingEnv.getFiler().createSourceFile(artifact.canonicalName());
-    try (var writer = new PrintWriter(file.openWriter())) {
+    Filer filer = processingEnv.getFiler();
+    JavaFileObject fileObject;
+    try {
+      fileObject = filer.createSourceFile(artifact.canonicalName());
+    } catch (FilerException e) {
+      logMandatoryWarning(annotatedElement, "Failed to write generated source JAVA file. " + e.getMessage());
+      return;
+    }
+    try (var writer = new PrintWriter(fileObject.openWriter())) {
       writer.write(artifact.source());
     }
   }
 
+  protected void logMandatoryWarning(Element element, String message, Object... messageArguments) {
+    log(Diagnostic.Kind.MANDATORY_WARNING, element, message, messageArguments);
+  }
+
   protected void logError(Element element, String message, Object... messageArguments) {
-    var errorMessage = "ERROR. Failed to auto generate an artifact for class " + getElementName(element) +
+    log(Diagnostic.Kind.ERROR, element, message, messageArguments);
+  }
+
+  protected void log(Diagnostic.Kind level, Element element, String message, Object... messageArguments) {
+    var errorMessage = "Process to generate an artifact(s) for class " + getElementName(element) +
         " marked with an annotation @" +  annotation.getSimpleName() + ". " +
         message.formatted(messageArguments);
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, errorMessage);
+    processingEnv.getMessager().printMessage(level, errorMessage);
   }
 
   protected void logError(Element element, Exception ex) {
