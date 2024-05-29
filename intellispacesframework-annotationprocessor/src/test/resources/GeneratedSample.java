@@ -1,7 +1,7 @@
 package tech.intellispacesframework.annotationprocessor;
 
 /**
- * This class generated from class intellispaces.annotationprocessor.SourceSample.
+ * This class generated from class tech.intellispacesframework.annotationprocessor.SourceSample.
  */
 public interface GeneratedSample {
 }

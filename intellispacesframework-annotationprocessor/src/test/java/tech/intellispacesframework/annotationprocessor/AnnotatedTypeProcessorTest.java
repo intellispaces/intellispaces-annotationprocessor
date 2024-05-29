@@ -28,7 +28,7 @@ public class AnnotatedTypeProcessorTest {
     // Then
     CompilationSubject.assertThat(compilation).succeeded();
     CompilationSubject.assertThat(compilation)
-        .generatedSourceFile("intellispaces.annotationprocessor.GeneratedSample")
+        .generatedSourceFile("tech.intellispacesframework.annotationprocessor.GeneratedSample")
         .contentsAsString(StandardCharsets.UTF_8)
         .isEqualTo(ResourceFunctions.readResourceAsStringForce(AnnotatedTypeProcessorTest.class, "/GeneratedSample.java"));
   }

@@ -1,5 +1,6 @@
 package tech.intellispacesframework.annotationprocessor.artifact;
 
+import tech.intellispacesframework.commons.exception.UnexpectedViolationException;
 import tech.intellispacesframework.commons.type.TypeFunctions;
 
 import java.util.ArrayList;
@@ -58,9 +59,17 @@ public class JavaArtifactContext {
     return TypeFunctions.getPackageName(generatedClassCanonicalName);
   }
 
-  public String simpleName(String canonicalName) {
+  public String simpleNameOf(Class<?> aClass) {
+    return simpleNameOf(aClass.getCanonicalName());
+  }
+
+  public String simpleNameOf(String canonicalName) {
     String simpleName = TypeFunctions.getSimpleName(canonicalName);
     Set<String> set = imports.get(simpleName);
+    if (set == null) {
+      throw UnexpectedViolationException.withMessage("Class {} is missing from list of imported classes",
+          canonicalName);
+    }
     if (canonicalName.equals(set.iterator().next())) {
       return simpleName;
     }
