@@ -1,6 +1,6 @@
-package tech.intellispacesframework.annotationprocessor.generator;
+package tech.intellispaces.framework.annotationprocessor.generator;
 
-import tech.intellispacesframework.annotationprocessor.artifact.Artifact;
+import tech.intellispaces.framework.annotationprocessor.artifact.Artifact;
 
 import java.util.Optional;
 

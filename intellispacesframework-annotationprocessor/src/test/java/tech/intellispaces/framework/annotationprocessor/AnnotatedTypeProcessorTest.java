@@ -1,11 +1,11 @@
-package tech.intellispacesframework.annotationprocessor;
+package tech.intellispaces.framework.annotationprocessor;
 
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
-import tech.intellispacesframework.commons.resource.ResourceFunctions;
+import tech.intellispaces.framework.commons.resource.ResourceFunctions;
 
 import javax.tools.JavaFileObject;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +28,7 @@ public class AnnotatedTypeProcessorTest {
     // Then
     CompilationSubject.assertThat(compilation).succeeded();
     CompilationSubject.assertThat(compilation)
-        .generatedSourceFile("tech.intellispacesframework.annotationprocessor.GeneratedSample")
+        .generatedSourceFile("tech.intellispaces.framework.annotationprocessor.GeneratedSample")
         .contentsAsString(StandardCharsets.UTF_8)
         .isEqualTo(ResourceFunctions.readResourceAsStringForce(AnnotatedTypeProcessorTest.class, "/GeneratedSample.java"));
   }

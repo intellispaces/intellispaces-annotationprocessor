@@ -1,7 +1,7 @@
-package tech.intellispacesframework.annotationprocessor;
+package tech.intellispaces.framework.annotationprocessor;
 
-import tech.intellispacesframework.annotationprocessor.generator.TemplateBasedJavaArtifactGenerator;
-import tech.intellispacesframework.javastatements.statement.custom.CustomType;
+import tech.intellispaces.framework.annotationprocessor.generator.TemplateBasedJavaArtifactGenerator;
+import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
 
 import java.util.Map;
 

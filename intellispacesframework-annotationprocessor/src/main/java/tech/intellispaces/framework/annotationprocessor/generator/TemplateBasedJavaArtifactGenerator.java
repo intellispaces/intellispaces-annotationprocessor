@@ -1,12 +1,12 @@
-package tech.intellispacesframework.annotationprocessor.generator;
+package tech.intellispaces.framework.annotationprocessor.generator;
 
-import tech.intellispacesframework.annotationprocessor.artifact.Artifact;
-import tech.intellispacesframework.annotationprocessor.artifact.JavaArtifactImpl;
-import tech.intellispacesframework.commons.exception.UnexpectedViolationException;
-import tech.intellispacesframework.commons.resource.ResourceFunctions;
-import tech.intellispacesframework.javastatements.statement.custom.CustomType;
-import tech.intellispacesframework.templateengine.TemplateEngine;
-import tech.intellispacesframework.templateengine.template.Template;
+import tech.intellispaces.framework.annotationprocessor.artifact.Artifact;
+import tech.intellispaces.framework.annotationprocessor.artifact.JavaArtifactImpl;
+import tech.intellispaces.framework.commons.exception.UnexpectedViolationException;
+import tech.intellispaces.framework.commons.resource.ResourceFunctions;
+import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
+import tech.intellispaces.framework.templateengine.TemplateEngine;
+import tech.intellispaces.framework.templateengine.template.Template;
 
 import java.util.Map;
 import java.util.Optional;

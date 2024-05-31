@@ -1,4 +1,4 @@
-package tech.intellispacesframework.annotationprocessor.artifact;
+package tech.intellispaces.framework.annotationprocessor.artifact;
 
 public enum ArtifactTypes implements ArtifactType {
 

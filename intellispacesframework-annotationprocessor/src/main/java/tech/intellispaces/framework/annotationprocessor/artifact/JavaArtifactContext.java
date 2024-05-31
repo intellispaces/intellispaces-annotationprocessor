@@ -1,7 +1,7 @@
-package tech.intellispacesframework.annotationprocessor.artifact;
+package tech.intellispaces.framework.annotationprocessor.artifact;
 
-import tech.intellispacesframework.commons.exception.UnexpectedViolationException;
-import tech.intellispacesframework.commons.type.TypeFunctions;
+import tech.intellispaces.framework.commons.exception.UnexpectedViolationException;
+import tech.intellispaces.framework.commons.type.TypeFunctions;
 
 import java.util.ArrayList;
 import java.util.Collection;
