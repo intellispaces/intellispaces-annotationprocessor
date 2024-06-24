@@ -19,6 +19,11 @@ public class AnnotatedTypeProcessorSample extends AnnotatedTypeProcessor {
   }
 
   @Override
+  protected AnnotatedTypeValidator getValidator() {
+    return null;
+  }
+
+  @Override
   protected List<ArtifactGenerator> makeArtifactGenerators(CustomType annotatedType) {
     return List.of(new ArtifactGeneratorSample(annotatedType));
   }

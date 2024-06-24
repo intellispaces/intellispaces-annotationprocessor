@@ -49,6 +49,8 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
   protected abstract boolean isApplicable(CustomType annotatedStatement);
 
+  protected abstract AnnotatedTypeValidator getValidator();
+
   protected abstract List<ArtifactGenerator> makeArtifactGenerators(CustomType annotatedStatement);
 
   @Override
@@ -80,6 +82,12 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
       if (!isApplicable(annotatedType)) {
         return;
       }
+
+      AnnotatedTypeValidator validator = getValidator();
+      if (validator != null) {
+        validator.validate(annotatedType);
+      }
+
       List<ArtifactGenerator> generators = makeArtifactGenerators(annotatedType);
       for (ArtifactGenerator generator : generators) {
         Optional<Artifact> artifact = generator.generate();
