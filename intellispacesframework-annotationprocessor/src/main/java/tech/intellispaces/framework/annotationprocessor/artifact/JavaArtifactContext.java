@@ -78,7 +78,7 @@ public class JavaArtifactContext {
 
   public List<String> getImports() {
     return imports.values().stream()
-        .flatMap(Set::stream)
+        .map(s -> s.iterator().next())
         .filter(className -> !className.startsWith("java.lang."))
         .filter(className -> !className.equals(generatedClassCanonicalName))
         .sorted()
