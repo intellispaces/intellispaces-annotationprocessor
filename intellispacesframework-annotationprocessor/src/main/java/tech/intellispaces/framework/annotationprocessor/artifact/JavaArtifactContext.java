@@ -65,6 +65,9 @@ public class JavaArtifactContext {
 
   public String simpleNameOf(String canonicalName) {
     String simpleName = TypeFunctions.getSimpleName(canonicalName);
+    if (canonicalName.startsWith("java.lang.")) {
+      return simpleName;
+    }
     Set<String> set = imports.get(simpleName);
     if (set == null) {
       throw UnexpectedViolationException.withMessage("Class {} is missing from list of imported classes",
