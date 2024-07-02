@@ -84,6 +84,11 @@ public class JavaArtifactContext {
     return simpleNameOf(canonicalName);
   }
 
+  public String addToImportAndGetSimpleName(Class<?> aClass) {
+    addImport(aClass);
+    return simpleNameOf(aClass);
+  }
+
   public List<String> getImports() {
     return imports.values().stream()
         .map(s -> s.iterator().next())
