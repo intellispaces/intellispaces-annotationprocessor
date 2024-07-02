@@ -79,6 +79,11 @@ public class JavaArtifactContext {
     return canonicalName;
   }
 
+  public String addToImportAndGetSimpleName(String canonicalName) {
+    addImport(canonicalName);
+    return simpleNameOf(canonicalName);
+  }
+
   public List<String> getImports() {
     return imports.values().stream()
         .map(s -> s.iterator().next())
