@@ -20,6 +20,7 @@ public class JavaArtifactContext {
 
   public void generatedClassCanonicalName(String canonicalName) {
     this.generatedClassCanonicalName = canonicalName;
+    addImport(canonicalName);
   }
 
   public void addImport(Class<?> aClass) {
