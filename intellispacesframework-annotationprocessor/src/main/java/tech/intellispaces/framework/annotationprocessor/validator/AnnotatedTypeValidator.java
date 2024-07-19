@@ -1,4 +1,4 @@
-package tech.intellispaces.framework.annotationprocessor;
+package tech.intellispaces.framework.annotationprocessor.validator;
 
 import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
 

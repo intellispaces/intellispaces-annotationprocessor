@@ -51,8 +51,11 @@ public abstract class TemplateBasedJavaArtifactGenerator implements ArtifactGene
   }
 
   private String synthesizeArtifact() throws Exception {
-    String templateSource = ResourceFunctions.readResourceAsString(TemplateBasedJavaArtifactGenerator.class, templateName()).orElseThrow(
-        () -> UnexpectedViolationException.withMessage("Template for generate artifact is not found. Template name {}", templateName())
+    String templateSource = ResourceFunctions.readResourceAsString(
+        TemplateBasedJavaArtifactGenerator.class, templateName()
+    ).orElseThrow(
+        () -> UnexpectedViolationException.withMessage("Template for generate artifact is not found. Template name {}",
+            templateName())
     );
     Template template = TemplateEngine.parseTemplate(templateSource);
     return TemplateEngine.resolveTemplate(template, templateVariables());

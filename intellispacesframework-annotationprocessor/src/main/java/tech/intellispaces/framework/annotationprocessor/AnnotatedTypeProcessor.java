@@ -4,6 +4,7 @@ import tech.intellispaces.framework.annotationprocessor.artifact.Artifact;
 import tech.intellispaces.framework.annotationprocessor.artifact.ArtifactTypes;
 import tech.intellispaces.framework.annotationprocessor.artifact.JavaArtifact;
 import tech.intellispaces.framework.annotationprocessor.generator.ArtifactGenerator;
+import tech.intellispaces.framework.annotationprocessor.validator.AnnotatedTypeValidator;
 import tech.intellispaces.framework.commons.exception.UnexpectedViolationException;
 import tech.intellispaces.framework.javastatements.JavaStatements;
 import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
@@ -109,7 +110,8 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
   }
 
   private void writeJavaArtifact(TypeElement annotatedElement, JavaArtifact artifact) throws IOException {
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Write auto generated Java file " + artifact.canonicalName());
+    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,
+        "Write auto generated Java file " + artifact.canonicalName());
     Filer filer = processingEnv.getFiler();
     JavaFileObject fileObject;
     try {
