@@ -4,6 +4,7 @@ import tech.intellispaces.framework.annotationprocessor.generator.ArtifactGenera
 import tech.intellispaces.framework.annotationprocessor.validator.AnnotatedTypeValidator;
 import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
 
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.ElementKind;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +26,9 @@ public class AnnotatedTypeProcessorSample extends AnnotatedTypeProcessor {
   }
 
   @Override
-  protected List<ArtifactGenerator> makeArtifactGenerators(CustomType annotatedType) {
+  protected List<ArtifactGenerator> makeArtifactGenerators(
+      CustomType annotatedType, RoundEnvironment roundEnv
+  ) {
     return List.of(new ArtifactGeneratorSample(annotatedType));
   }
 }

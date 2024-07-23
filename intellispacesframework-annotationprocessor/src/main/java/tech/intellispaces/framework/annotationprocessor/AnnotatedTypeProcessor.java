@@ -52,7 +52,9 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
   protected abstract AnnotatedTypeValidator getValidator();
 
-  protected abstract List<ArtifactGenerator> makeArtifactGenerators(CustomType annotatedStatement);
+  protected abstract List<ArtifactGenerator> makeArtifactGenerators(
+      CustomType annotatedStatement, RoundEnvironment roundEnv
+  );
 
   @Override
   public SourceVersion getSupportedSourceVersion() {
@@ -89,7 +91,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
         validator.validate(annotatedType);
       }
 
-      List<ArtifactGenerator> generators = makeArtifactGenerators(annotatedType);
+      List<ArtifactGenerator> generators = makeArtifactGenerators(annotatedType, roundEnv);
       for (ArtifactGenerator generator : generators) {
         Optional<Artifact> artifact = generator.generate(roundEnv);
         if (artifact.isPresent()) {
