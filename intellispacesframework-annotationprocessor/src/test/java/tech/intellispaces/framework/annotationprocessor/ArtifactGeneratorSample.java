@@ -3,6 +3,7 @@ package tech.intellispaces.framework.annotationprocessor;
 import tech.intellispaces.framework.annotationprocessor.generator.TemplateBasedJavaArtifactGenerator;
 import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
 
+import javax.annotation.processing.RoundEnvironment;
 import java.util.Map;
 
 public class ArtifactGeneratorSample extends TemplateBasedJavaArtifactGenerator {
@@ -28,7 +29,7 @@ public class ArtifactGeneratorSample extends TemplateBasedJavaArtifactGenerator 
   }
 
   @Override
-  protected boolean analyzeAnnotatedType() {
+  protected boolean analyzeAnnotatedType(RoundEnvironment roundEnv) {
     sourceClassName = annotatedType.canonicalName();
     generatedClassName = annotatedType.packageName() + ".GeneratedSample";
     return true;

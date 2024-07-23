@@ -70,12 +70,12 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
       if (!applicableKinds.contains(annotatedElement.getKind())) {
         continue;
       }
-      processCustomType((TypeElement) annotatedElement);
+      processCustomType((TypeElement) annotatedElement, roundEnv);
     }
     return true;
   }
 
-  private void processCustomType(TypeElement annotatedElement) {
+  private void processCustomType(TypeElement annotatedElement, RoundEnvironment roundEnv) {
     TypeElement typeElement = null;
     try {
       typeElement = annotatedElement;
@@ -91,7 +91,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
       List<ArtifactGenerator> generators = makeArtifactGenerators(annotatedType);
       for (ArtifactGenerator generator : generators) {
-        Optional<Artifact> artifact = generator.generate();
+        Optional<Artifact> artifact = generator.generate(roundEnv);
         if (artifact.isPresent()) {
           writeArtifact(annotatedElement, artifact.get());
         }

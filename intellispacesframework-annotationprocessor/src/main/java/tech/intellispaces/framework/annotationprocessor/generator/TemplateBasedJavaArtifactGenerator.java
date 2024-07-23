@@ -8,6 +8,7 @@ import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
 import tech.intellispaces.framework.templateengine.TemplateEngine;
 import tech.intellispaces.framework.templateengine.template.Template;
 
+import javax.annotation.processing.RoundEnvironment;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,11 +40,11 @@ public abstract class TemplateBasedJavaArtifactGenerator implements ArtifactGene
   /**
    * Analyzes type and returns <code>true</code> if artifact should be created or <code>false</code> otherwise.
    */
-  protected abstract boolean analyzeAnnotatedType();
+  protected abstract boolean analyzeAnnotatedType(RoundEnvironment roundEnv);
 
   @Override
-  public Optional<Artifact> generate() throws Exception {
-    if (!analyzeAnnotatedType()) {
+  public Optional<Artifact> generate(RoundEnvironment roundEnv) throws Exception {
+    if (!analyzeAnnotatedType(roundEnv)) {
       return Optional.empty();
     }
     String source = synthesizeArtifact();

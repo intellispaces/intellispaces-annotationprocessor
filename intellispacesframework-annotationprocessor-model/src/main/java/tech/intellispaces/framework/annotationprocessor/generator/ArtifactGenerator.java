@@ -2,6 +2,7 @@ package tech.intellispaces.framework.annotationprocessor.generator;
 
 import tech.intellispaces.framework.annotationprocessor.artifact.Artifact;
 
+import javax.annotation.processing.RoundEnvironment;
 import java.util.Optional;
 
 /**
@@ -9,5 +10,5 @@ import java.util.Optional;
  */
 public interface ArtifactGenerator {
 
-  Optional<Artifact> generate() throws Exception;
+  Optional<Artifact> generate(RoundEnvironment roundEnv) throws Exception;
 }
