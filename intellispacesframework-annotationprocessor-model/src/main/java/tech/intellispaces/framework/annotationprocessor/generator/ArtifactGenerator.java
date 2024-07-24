@@ -10,5 +10,7 @@ import java.util.Optional;
  */
 public interface ArtifactGenerator {
 
+  String getArtifactName();
+
   Optional<Artifact> generate(RoundEnvironment roundEnv) throws Exception;
 }

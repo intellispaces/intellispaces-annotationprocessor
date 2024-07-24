@@ -15,6 +15,11 @@ public class ArtifactGeneratorSample extends TemplateBasedJavaArtifactGenerator 
   }
 
   @Override
+  public String getArtifactName() {
+    return generatedClassName;
+  }
+
+  @Override
   protected String templateName() {
     return "/sample.template";
   }

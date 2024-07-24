@@ -3,12 +3,14 @@ package tech.intellispaces.framework.annotationprocessor.generator;
 import tech.intellispaces.framework.annotationprocessor.artifact.Artifact;
 import tech.intellispaces.framework.annotationprocessor.artifact.JavaArtifactImpl;
 import tech.intellispaces.framework.commons.exception.UnexpectedViolationException;
+import tech.intellispaces.framework.commons.function.Functions;
 import tech.intellispaces.framework.commons.resource.ResourceFunctions;
 import tech.intellispaces.framework.javastatements.statement.custom.CustomType;
 import tech.intellispaces.framework.templateengine.TemplateEngine;
 import tech.intellispaces.framework.templateengine.template.Template;
 
 import javax.annotation.processing.RoundEnvironment;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -52,13 +54,21 @@ public abstract class TemplateBasedJavaArtifactGenerator implements ArtifactGene
   }
 
   private String synthesizeArtifact() throws Exception {
+    Template template = TEMPLATE_CACHE.computeIfAbsent(templateName(),
+        Functions.coveredThrowableFunction(this::makeTemplate)
+    );
+    return TemplateEngine.resolveTemplate(template, templateVariables());
+  }
+
+  private Template makeTemplate(String templateName) throws Exception {
     String templateSource = ResourceFunctions.readResourceAsString(
         TemplateBasedJavaArtifactGenerator.class, templateName()
     ).orElseThrow(
         () -> UnexpectedViolationException.withMessage("Template for generate artifact is not found. Template name {}",
             templateName())
     );
-    Template template = TemplateEngine.parseTemplate(templateSource);
-    return TemplateEngine.resolveTemplate(template, templateVariables());
+    return TemplateEngine.parseTemplate(templateSource);
   }
+
+  private static final Map<String, Template> TEMPLATE_CACHE = new HashMap<>();
 }

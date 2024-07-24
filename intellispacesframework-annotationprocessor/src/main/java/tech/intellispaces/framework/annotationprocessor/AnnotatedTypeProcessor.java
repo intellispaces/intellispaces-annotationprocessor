@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -93,9 +94,16 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
       List<ArtifactGenerator> generators = makeArtifactGenerators(annotatedType, roundEnv);
       for (ArtifactGenerator generator : generators) {
+        String artifactName = generator.getArtifactName();
+        if (GENERATED_ARTIFACT_CACHE.contains(artifactName)) {
+          log(Diagnostic.Kind.NOTE, typeElement, "Artifact %s has already been generated before", artifactName);
+          continue;
+        }
+
         Optional<Artifact> artifact = generator.generate(roundEnv);
         if (artifact.isPresent()) {
           writeArtifact(annotatedElement, artifact.get());
+          GENERATED_ARTIFACT_CACHE.add(artifactName);
         }
       }
     } catch (Exception e) {
@@ -155,4 +163,6 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
       return element.getSimpleName().toString();
     }
   }
+
+  private static final Set<String> GENERATED_ARTIFACT_CACHE = new HashSet<>();
 }
