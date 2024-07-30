@@ -3,39 +3,39 @@
 
     <parent>
         <groupId>intellispaces</groupId>
-        <artifactId>intellispacesframework-parent-pom</artifactId>
+        <artifactId>intellispaces-parent-pom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>intellispacesframework-annotationprocessor-parent</artifactId>
+    <artifactId>intellispaces-annotations-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>intellispacesframework-annotationprocessor-model</module>
-        <module>intellispacesframework-annotationprocessor</module>
+        <module>intellispaces-annotations-model</module>
+        <module>intellispaces-annotations</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Intellispaces framework -->
-                <dependency>
-                    <groupId>intellispaces</groupId>
-                    <artifactId>intellispacesframework-annotationprocessor-model</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
-                </dependency>
+            <!-- Intellispaces -->
             <dependency>
                 <groupId>intellispaces</groupId>
-                <artifactId>intellispacesframework-javastatements</artifactId>
+                <artifactId>intellispaces-annotations-model</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>intellispaces</groupId>
-                <artifactId>intellispacesframework-templateengine</artifactId>
+                <artifactId>intellispaces-javastatements</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>intellispaces</groupId>
-                <artifactId>intellispacesframework-commons</artifactId>
+                <artifactId>intellispaces-templates</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>intellispaces</groupId>
+                <artifactId>intellispaces-commons</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
