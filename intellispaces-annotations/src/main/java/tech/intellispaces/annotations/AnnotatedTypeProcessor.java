@@ -100,10 +100,21 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
           continue;
         }
 
-        Optional<Artifact> artifact = generator.generate(roundEnv);
+        final Optional<Artifact> artifact;
+        try {
+          artifact = generator.generate(roundEnv);
+        } catch (Exception e) {
+          logErrorWhileGeneratingArtifact(typeElement, generator, e);
+          return;
+        }
+
         if (artifact.isPresent()) {
-          writeArtifact(annotatedElement, artifact.get());
-          GENERATED_ARTIFACT_CACHE.add(artifactName);
+          try {
+            writeArtifact(annotatedElement, artifact.get());
+            GENERATED_ARTIFACT_CACHE.add(artifactName);
+          } catch (Exception e) {
+            logErrorWhileWritingArtifact(typeElement, e);
+          }
         }
       }
     } catch (Exception e) {
@@ -152,6 +163,20 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
   protected void logError(Element element, Exception ex) {
     var sw = new StringWriter();
+    ex.printStackTrace(new PrintWriter(sw));
+    logError(element, sw.toString());
+  }
+
+  protected void logErrorWhileGeneratingArtifact(Element element, ArtifactGenerator generator, Exception ex) {
+    var sw = new StringWriter();
+    sw.write("Artifact generator " + generator.getClass().getCanonicalName() + ".\n");
+    ex.printStackTrace(new PrintWriter(sw));
+    logError(element, sw.toString());
+  }
+
+  protected void logErrorWhileWritingArtifact(Element element, Exception ex) {
+    var sw = new StringWriter();
+    sw.write("Could not write artifact.\n");
     ex.printStackTrace(new PrintWriter(sw));
     logError(element, sw.toString());
   }
