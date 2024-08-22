@@ -1,13 +1,13 @@
-package tech.intellispaces.annotations.generator;
+package intellispaces.annotations.generator;
 
-import tech.intellispaces.annotations.artifact.Artifact;
-import tech.intellispaces.annotations.artifact.JavaArtifactImpl;
-import tech.intellispaces.commons.exception.UnexpectedViolationException;
-import tech.intellispaces.commons.function.Functions;
-import tech.intellispaces.commons.resource.ResourceFunctions;
-import tech.intellispaces.javastatements.customtype.CustomType;
-import tech.intellispaces.templates.TemplateEngine;
-import tech.intellispaces.templates.template.Template;
+import intellispaces.annotations.artifact.Artifact;
+import intellispaces.annotations.artifact.JavaArtifactImpl;
+import intellispaces.commons.exception.UnexpectedViolationException;
+import intellispaces.commons.function.Functions;
+import intellispaces.commons.resource.ResourceFunctions;
+import intellispaces.javastatements.customtype.CustomType;
+import intellispaces.templates.TemplateEngine;
+import intellispaces.templates.template.Template;
 
 import javax.annotation.processing.RoundEnvironment;
 import java.util.HashMap;

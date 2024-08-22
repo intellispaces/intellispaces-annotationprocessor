@@ -1,4 +1,4 @@
-package tech.intellispaces.annotations.artifact;
+package intellispaces.annotations.artifact;
 
 import java.util.Optional;
 

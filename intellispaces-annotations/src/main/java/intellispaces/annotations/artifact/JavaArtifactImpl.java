@@ -1,4 +1,4 @@
-package tech.intellispaces.annotations.artifact;
+package intellispaces.annotations.artifact;
 
 public record JavaArtifactImpl(
     String canonicalName,

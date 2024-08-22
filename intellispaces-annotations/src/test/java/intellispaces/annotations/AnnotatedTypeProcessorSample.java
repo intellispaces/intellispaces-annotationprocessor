@@ -1,8 +1,8 @@
-package tech.intellispaces.annotations;
+package intellispaces.annotations;
 
-import tech.intellispaces.annotations.generator.ArtifactGenerator;
-import tech.intellispaces.annotations.validator.AnnotatedTypeValidator;
-import tech.intellispaces.javastatements.customtype.CustomType;
+import intellispaces.annotations.generator.ArtifactGenerator;
+import intellispaces.annotations.validator.AnnotatedTypeValidator;
+import intellispaces.javastatements.customtype.CustomType;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.ElementKind;

@@ -1,6 +1,6 @@
-package tech.intellispaces.annotations.generator;
+package intellispaces.annotations.generator;
 
-import tech.intellispaces.annotations.artifact.Artifact;
+import intellispaces.annotations.artifact.Artifact;
 
 import javax.annotation.processing.RoundEnvironment;
 import java.util.Optional;

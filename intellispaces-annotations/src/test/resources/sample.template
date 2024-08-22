@@ -1,4 +1,4 @@
-package tech.intellispaces.framework.annotationprocessor;
+package intellispaces.framework.annotationprocessor;
 
 /**
  * This class generated from class {{$SOURCE_CLASS_NAME}}.

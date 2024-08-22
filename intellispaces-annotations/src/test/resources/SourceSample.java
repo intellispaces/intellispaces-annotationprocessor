@@ -1,6 +1,6 @@
-package tech.intellispaces.framework.annotationprocessor;
+package intellispaces.framework.annotationprocessor;
 
-import tech.intellispaces.annotations.AnnotationSample;
+import intellispaces.annotations.AnnotationSample;
 
 @AnnotationSample(enableAutoGenerate = true)
 public interface SourceSample {

@@ -1,13 +1,13 @@
-package tech.intellispaces.annotations;
+package intellispaces.annotations;
 
-import tech.intellispaces.annotations.artifact.Artifact;
-import tech.intellispaces.annotations.artifact.ArtifactTypes;
-import tech.intellispaces.annotations.artifact.JavaArtifact;
-import tech.intellispaces.annotations.generator.ArtifactGenerator;
-import tech.intellispaces.annotations.validator.AnnotatedTypeValidator;
-import tech.intellispaces.commons.exception.UnexpectedViolationException;
-import tech.intellispaces.javastatements.JavaStatements;
-import tech.intellispaces.javastatements.customtype.CustomType;
+import intellispaces.annotations.artifact.ArtifactTypes;
+import intellispaces.annotations.validator.AnnotatedTypeValidator;
+import intellispaces.annotations.artifact.Artifact;
+import intellispaces.annotations.artifact.JavaArtifact;
+import intellispaces.annotations.generator.ArtifactGenerator;
+import intellispaces.commons.exception.UnexpectedViolationException;
+import intellispaces.javastatements.JavaStatements;
+import intellispaces.javastatements.customtype.CustomType;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;

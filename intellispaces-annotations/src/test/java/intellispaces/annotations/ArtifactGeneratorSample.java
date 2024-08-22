@@ -1,7 +1,7 @@
-package tech.intellispaces.annotations;
+package intellispaces.annotations;
 
-import tech.intellispaces.annotations.generator.TemplateBasedJavaArtifactGenerator;
-import tech.intellispaces.javastatements.customtype.CustomType;
+import intellispaces.annotations.generator.TemplateBasedJavaArtifactGenerator;
+import intellispaces.javastatements.customtype.CustomType;
 
 import javax.annotation.processing.RoundEnvironment;
 import java.util.Map;
