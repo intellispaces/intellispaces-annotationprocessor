@@ -1,10 +1,10 @@
 package intellispaces.annotations;
 
-import intellispaces.annotations.artifact.ArtifactTypes;
-import intellispaces.annotations.validator.AnnotatedTypeValidator;
 import intellispaces.annotations.artifact.Artifact;
+import intellispaces.annotations.artifact.ArtifactTypes;
 import intellispaces.annotations.artifact.JavaArtifact;
 import intellispaces.annotations.generator.ArtifactGenerator;
+import intellispaces.annotations.validator.AnnotatedTypeValidator;
 import intellispaces.commons.exception.UnexpectedViolationException;
 import intellispaces.javastatements.JavaStatements;
 import intellispaces.javastatements.customtype.CustomType;
@@ -49,11 +49,11 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     this.applicableKinds = applicableKinds;
   }
 
-  protected abstract boolean isApplicable(CustomType annotatedStatement);
+  public abstract boolean isApplicable(CustomType annotatedStatement);
 
-  protected abstract AnnotatedTypeValidator getValidator();
+  public abstract AnnotatedTypeValidator getValidator();
 
-  protected abstract List<ArtifactGenerator> makeArtifactGenerators(
+  public abstract List<ArtifactGenerator> makeArtifactGenerators(
       CustomType annotatedStatement, RoundEnvironment roundEnv
   );
 

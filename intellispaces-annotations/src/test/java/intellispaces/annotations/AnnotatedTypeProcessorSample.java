@@ -16,17 +16,17 @@ public class AnnotatedTypeProcessorSample extends AnnotatedTypeProcessor {
   }
 
   @Override
-  protected boolean isApplicable(CustomType annotatedType) {
+  public boolean isApplicable(CustomType annotatedType) {
     return annotatedType.selectAnnotation(AnnotationSample.class).orElseThrow().enableAutoGenerate();
   }
 
   @Override
-  protected AnnotatedTypeValidator getValidator() {
+  public AnnotatedTypeValidator getValidator() {
     return null;
   }
 
   @Override
-  protected List<ArtifactGenerator> makeArtifactGenerators(
+  public List<ArtifactGenerator> makeArtifactGenerators(
       CustomType annotatedType, RoundEnvironment roundEnv
   ) {
     return List.of(new ArtifactGeneratorSample(annotatedType));

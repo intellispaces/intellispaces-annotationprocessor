@@ -4,8 +4,8 @@ import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
-import org.junit.Test;
 import intellispaces.commons.resource.ResourceFunctions;
+import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 import java.nio.charset.StandardCharsets;
