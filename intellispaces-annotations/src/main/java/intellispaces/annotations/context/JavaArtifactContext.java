@@ -1,4 +1,4 @@
-package intellispaces.annotations.artifact;
+package intellispaces.annotations.context;
 
 import intellispaces.commons.exception.UnexpectedViolationException;
 import intellispaces.commons.type.TypeFunctions;

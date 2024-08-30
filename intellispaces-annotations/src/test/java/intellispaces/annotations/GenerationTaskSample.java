@@ -1,22 +1,28 @@
 package intellispaces.annotations;
 
-import intellispaces.annotations.generator.TemplateBasedJavaArtifactGenerator;
+import intellispaces.annotations.context.AnnotationProcessingContext;
+import intellispaces.annotations.generator.TemplateSourceArtifactGenerationTask;
 import intellispaces.javastatements.customtype.CustomType;
 
 import javax.annotation.processing.RoundEnvironment;
 import java.util.Map;
 
-public class ArtifactGeneratorSample extends TemplateBasedJavaArtifactGenerator {
+public class GenerationTaskSample extends TemplateSourceArtifactGenerationTask {
   private String sourceClassName;
   private String generatedClassName;
 
-  public ArtifactGeneratorSample(CustomType annotatedType) {
-    super(annotatedType);
+  public GenerationTaskSample(CustomType annotatedType) {
+    super(annotatedType, annotatedType);
   }
 
   @Override
-  public String getArtifactName() {
+  public String artifactName() {
     return generatedClassName;
+  }
+
+  @Override
+  public boolean isRelevant(AnnotationProcessingContext context) {
+    return true;
   }
 
   @Override
@@ -26,11 +32,6 @@ public class ArtifactGeneratorSample extends TemplateBasedJavaArtifactGenerator 
 
   protected Map<String, Object> templateVariables() {
     return Map.of("SOURCE_CLASS_NAME", sourceClassName);
-  }
-
-  @Override
-  protected String canonicalName() {
-    return generatedClassName;
   }
 
   @Override
