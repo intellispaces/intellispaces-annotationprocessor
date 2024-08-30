@@ -80,7 +80,7 @@ public abstract class TemplateSourceArtifactGenerationTask implements Generation
     String templateSource = ResourceFunctions.readResourceAsString(
         TemplateSourceArtifactGenerationTask.class, templateName()
     ).orElseThrow(() -> UnexpectedViolationException.withMessage(
-        "Template for generate artifact is not found. Template name {}", templateName())
+        "Template for generate artifact is not found. Template name {0}", templateName())
     );
     return TemplateEngine.parseTemplate(templateSource);
   }

@@ -71,7 +71,7 @@ public class JavaArtifactContext {
     }
     Set<String> set = imports.get(simpleName);
     if (set == null) {
-      throw UnexpectedViolationException.withMessage("Class {} is missing from list of imported classes",
+      throw UnexpectedViolationException.withMessage("Class {0} is missing from list of imported classes",
           canonicalName);
     }
     if (canonicalName.equals(set.iterator().next())) {

@@ -47,7 +47,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     this.annotation = annotation;
     for (ElementKind elementKind : applicableKinds) {
       if (!ENABLED_ELEMENT_KINDS.contains(elementKind)) {
-        throw UnexpectedViolationException.withMessage("Unsupported element kind {}", elementKind);
+        throw UnexpectedViolationException.withMessage("Unsupported element kind {0}", elementKind);
       }
     }
     this.applicableKinds = applicableKinds;
