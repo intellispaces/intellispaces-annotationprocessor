@@ -2,40 +2,40 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>intellispaces</groupId>
+        <groupId>intellispaces-common</groupId>
         <artifactId>intellispaces-parent-pom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>intellispaces-annotations-parent</artifactId>
+    <artifactId>intellispaces-annotationprocessor-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>intellispaces-annotations-model</module>
-        <module>intellispaces-annotations</module>
+        <module>intellispaces-annotationprocessor-model</module>
+        <module>intellispaces-annotationprocessor</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <!-- Intellispaces -->
             <dependency>
-                <groupId>intellispaces</groupId>
-                <artifactId>intellispaces-annotations-model</artifactId>
+                <groupId>intellispaces-common</groupId>
+                <artifactId>intellispaces-annotationprocessor-model</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>intellispaces</groupId>
-                <artifactId>intellispaces-javastatements</artifactId>
+                <groupId>intellispaces-common</groupId>
+                <artifactId>intellispaces-javastatement</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>intellispaces</groupId>
-                <artifactId>intellispaces-templates</artifactId>
+                <groupId>intellispaces-common</groupId>
+                <artifactId>intellispaces-templateengine</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>intellispaces</groupId>
-                <artifactId>intellispaces-commons</artifactId>
+                <groupId>intellispaces-common</groupId>
+                <artifactId>intellispaces-base</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
