@@ -2,11 +2,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>intellispaces-common</groupId>
+        <groupId>intellispaces-parent</groupId>
         <artifactId>intellispaces-parent-pom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>intellispaces-common</groupId>
     <artifactId>intellispaces-annotationprocessor-parent</artifactId>
     <packaging>pom</packaging>
 
