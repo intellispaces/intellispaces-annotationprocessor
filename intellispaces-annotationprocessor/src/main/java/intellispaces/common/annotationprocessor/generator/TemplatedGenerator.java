@@ -59,7 +59,7 @@ public abstract class TemplatedGenerator implements Generator {
   @Override
   public Optional<Artifact> run(RoundEnvironment roundEnv) throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Start to process class {} to generate class {}. Annotation processor generator {}",
+      LOG.debug("Process class {} to generate class {}. Annotation processor generator {}",
           annotatedType.canonicalName(), artifactName(), this.getClass().getSimpleName()
       );
     }
