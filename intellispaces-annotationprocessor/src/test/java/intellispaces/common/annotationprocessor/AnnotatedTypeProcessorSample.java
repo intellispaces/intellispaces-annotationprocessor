@@ -1,6 +1,6 @@
 package intellispaces.common.annotationprocessor;
 
-import intellispaces.common.annotationprocessor.generator.GenerationTask;
+import intellispaces.common.annotationprocessor.generator.Generator;
 import intellispaces.common.annotationprocessor.validator.AnnotatedTypeValidator;
 import intellispaces.common.javastatement.customtype.CustomType;
 
@@ -26,9 +26,9 @@ public class AnnotatedTypeProcessorSample extends AnnotatedTypeProcessor {
   }
 
   @Override
-  public List<GenerationTask> makeTasks(
+  public List<Generator> makeGenerators(
       CustomType initiatorType, CustomType processedType, RoundEnvironment roundEnv
   ) {
-    return List.of(new GenerationTaskSample(processedType));
+    return List.of(new SampleGenerator(processedType));
   }
 }

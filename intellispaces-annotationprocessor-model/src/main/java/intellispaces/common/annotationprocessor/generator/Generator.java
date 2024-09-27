@@ -8,9 +8,9 @@ import javax.annotation.processing.RoundEnvironment;
 import java.util.Optional;
 
 /**
- * Artifact generation task.
+ * Artifact generator.
  */
-public interface GenerationTask {
+public interface Generator {
 
   /**
    * Initiator type.
@@ -29,5 +29,5 @@ public interface GenerationTask {
 
   boolean isRelevant(AnnotationProcessingContext context);
 
-  Optional<Artifact> execute(RoundEnvironment roundEnv) throws Exception;
+  Optional<Artifact> run(RoundEnvironment roundEnv) throws Exception;
 }

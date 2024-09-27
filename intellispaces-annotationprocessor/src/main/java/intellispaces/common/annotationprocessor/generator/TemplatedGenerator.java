@@ -17,16 +17,16 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Template based source artifact generation task.
+ * Template based source artifact generator.
  */
-public abstract class TemplateSourceArtifactGenerationTask implements GenerationTask {
+public abstract class TemplatedGenerator implements Generator {
   protected final CustomType initiatorType;
   protected final CustomType annotatedType;
 
   private static final Map<String, Template> TEMPLATE_CACHE = new HashMap<>();
-  private static final Logger LOG = LoggerFactory.getLogger(TemplateSourceArtifactGenerationTask.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TemplatedGenerator.class);
 
-  public TemplateSourceArtifactGenerationTask(CustomType initiatorType, CustomType annotatedType) {
+  public TemplatedGenerator(CustomType initiatorType, CustomType annotatedType) {
     this.initiatorType = initiatorType;
     this.annotatedType = annotatedType;
   }
@@ -57,7 +57,7 @@ public abstract class TemplateSourceArtifactGenerationTask implements Generation
   }
 
   @Override
-  public Optional<Artifact> execute(RoundEnvironment roundEnv) throws Exception {
+  public Optional<Artifact> run(RoundEnvironment roundEnv) throws Exception {
     LOG.debug("Annotation processor generator " + this.getClass().getSimpleName() +
         ". Process class " + annotatedType.canonicalName() +
         ". Generate class " + artifactName());
@@ -78,7 +78,7 @@ public abstract class TemplateSourceArtifactGenerationTask implements Generation
 
   private Template makeTemplate(String templateName) throws Exception {
     String templateSource = ResourceFunctions.readResourceAsString(
-        TemplateSourceArtifactGenerationTask.class, templateName()
+        TemplatedGenerator.class, templateName()
     ).orElseThrow(() -> UnexpectedViolationException.withMessage(
         "Template for generate artifact is not found. Template name {0}", templateName())
     );

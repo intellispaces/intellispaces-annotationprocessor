@@ -1,6 +1,6 @@
 package intellispaces.common.annotationprocessor.context;
 
-import intellispaces.common.annotationprocessor.generator.GenerationTask;
+import intellispaces.common.annotationprocessor.generator.Generator;
 import intellispaces.common.base.exception.UnexpectedViolationException;
 
 import java.lang.annotation.Annotation;
@@ -16,19 +16,19 @@ public class AnnotationProcessingContextImpl implements AnnotationProcessingCont
   private final Map<String, Map<Class<? extends Annotation>, SourceArtifactStatus>> sourceArtifactStatuses = new HashMap<>();
 
   public void finishTask(
-      Class<? extends Annotation> annotation, int commonNumberTasks, GenerationTask task
+      Class<? extends Annotation> annotation, Generator generator, int commonNumberTasks
   ) {
-    generatedArtifacts.add(task.artifactName());
+    generatedArtifacts.add(generator.artifactName());
 
     Map<Class<? extends Annotation>, SourceArtifactStatus> map = sourceArtifactStatuses.computeIfAbsent(
-        task.initiatorType().canonicalName(), k -> new HashMap<>()
+        generator.initiatorType().canonicalName(), k -> new HashMap<>()
     );
     SourceArtifactStatus status = map.computeIfAbsent(
         annotation, k -> new SourceArtifactStatus(commonNumberTasks));
     if (status.commonNumberTasks() != commonNumberTasks) {
       throw UnexpectedViolationException.withMessage("Inconsistent common number of tasks");
     }
-    status.processedTasks().add(task);
+    status.processedTasks().add(generator);
   }
 
   @Override
@@ -51,7 +51,7 @@ public class AnnotationProcessingContextImpl implements AnnotationProcessingCont
 
   private static final class SourceArtifactStatus {
     private final int commonNumberTasks;
-    private final List<GenerationTask> processedTasks = new ArrayList<>();
+    private final List<Generator> processedTasks = new ArrayList<>();
 
     SourceArtifactStatus(int commonNumberTasks) {
       this.commonNumberTasks = commonNumberTasks;
@@ -61,7 +61,7 @@ public class AnnotationProcessingContextImpl implements AnnotationProcessingCont
       return commonNumberTasks;
     }
 
-    List<GenerationTask> processedTasks() {
+    List<Generator> processedTasks() {
       return processedTasks;
     }
   }

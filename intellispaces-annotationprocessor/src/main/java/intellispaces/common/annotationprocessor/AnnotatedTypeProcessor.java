@@ -4,7 +4,7 @@ import intellispaces.common.annotationprocessor.artifact.Artifact;
 import intellispaces.common.annotationprocessor.artifact.ArtifactTypes;
 import intellispaces.common.annotationprocessor.artifact.SourceArtifact;
 import intellispaces.common.annotationprocessor.context.AnnotationProcessingContextImpl;
-import intellispaces.common.annotationprocessor.generator.GenerationTask;
+import intellispaces.common.annotationprocessor.generator.Generator;
 import intellispaces.common.annotationprocessor.validator.AnnotatedTypeValidator;
 import intellispaces.common.base.exception.UnexpectedViolationException;
 import intellispaces.common.javastatement.JavaStatements;
@@ -37,11 +37,10 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
   private final Class<? extends Annotation> annotation;
   private final Set<ElementKind> applicableKinds;
 
-  private static final AnnotationProcessingState STATE = new AnnotationProcessingState();
-
   private static final Set<ElementKind> ENABLED_ELEMENT_KINDS = Set.of(
       ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.RECORD, ElementKind.ENUM, ElementKind.ANNOTATION_TYPE
   );
+  private static final AnnotationProcessingState STATE = new AnnotationProcessingState();
 
   public AnnotatedTypeProcessor(Class<? extends Annotation> annotation, Set<ElementKind> applicableKinds) {
     this.annotation = annotation;
@@ -57,7 +56,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
   public abstract AnnotatedTypeValidator getValidator();
 
-  public abstract List<GenerationTask> makeTasks(
+  public abstract List<Generator> makeGenerators(
       CustomType initiatorType, CustomType processedType, RoundEnvironment roundEnv
   );
 
@@ -94,13 +93,13 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
         validator.validate(annotatedType);
       }
 
-      List<GenerationTask> tasks = makeTasks(annotatedType, annotatedType, roundEnv);
-      for (GenerationTask task : tasks) {
-        if (!task.isRelevant(STATE.context())) {
-          STATE.deferredTasks().add(new TaskDescription(annotation, annotatedElement, tasks.size(), task));
+      List<Generator> generators = makeGenerators(annotatedType, annotatedType, roundEnv);
+      for (Generator generator : generators) {
+        if (!generator.isRelevant(STATE.context())) {
+          STATE.deferredTasks().add(new Task(annotation, annotatedElement, generator, generators.size()));
           continue;
         }
-        executeTask(annotatedElement, task, tasks.size(), roundEnv);
+        runGenerator(annotatedElement, generator, roundEnv, generators.size());
         processDeferredTasks(roundEnv);
       }
     } catch (Exception e) {
@@ -108,19 +107,19 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     }
   }
 
-  private void executeTask(
-      TypeElement annotatedElement, GenerationTask task, int numberTasks, RoundEnvironment roundEnv
+  private void runGenerator(
+      TypeElement annotatedElement, Generator generator, RoundEnvironment roundEnv, int commonNumberTasks
   ) {
-    if (STATE.context().isGenerated(task.artifactName())) {
-      log(Diagnostic.Kind.NOTE, annotatedElement, "Artifact %s has already been generated before", task.artifactName());
+    if (STATE.context().isGenerated(generator.artifactName())) {
+      log(Diagnostic.Kind.NOTE, annotatedElement, "Artifact %s has already been generated before", generator.artifactName());
       return;
     }
 
     final Optional<Artifact> artifact;
     try {
-      artifact = task.execute(roundEnv);
+      artifact = generator.run(roundEnv);
     } catch (Exception e) {
-      logErrorWhileGeneratingArtifact(annotatedElement, task, e);
+      logErrorWhileGeneratingArtifact(annotatedElement, generator, e);
       return;
     }
 
@@ -131,17 +130,16 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
         logErrorWhileWritingArtifact(annotatedElement, e);
       }
     }
-
-    STATE.context().finishTask(annotation, numberTasks, task);
+    STATE.context().finishTask(annotation, generator, commonNumberTasks);
   }
 
   private void processDeferredTasks(RoundEnvironment roundEnv) {
-    Iterator<TaskDescription> iterator = STATE.deferredTasks().iterator();
+    Iterator<Task> iterator = STATE.deferredTasks().iterator();
     while (iterator.hasNext()) {
-      TaskDescription taskDescription = iterator.next();
-      if (taskDescription.task().isRelevant(STATE.context())) {
+      Task task = iterator.next();
+      if (task.generator().isRelevant(STATE.context())) {
         iterator.remove();
-        executeTask(taskDescription.annotatedElement(), taskDescription.task(), taskDescription.numberTasks(), roundEnv);
+        runGenerator(task.annotatedElement(), task.generator(), roundEnv, task.commonNumberTasks());
       }
     }
   }
@@ -155,8 +153,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
   }
 
   private void writeJavaArtifact(TypeElement annotatedElement, SourceArtifact artifact) throws IOException {
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,
-        "Write auto generated Java file " + artifact.name());
+    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Write auto generated file " + artifact.name());
     Filer filer = processingEnv.getFiler();
     JavaFileObject fileObject;
     try {
@@ -179,7 +176,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
   }
 
   protected void log(Diagnostic.Kind level, Element element, String message, Object... messageArguments) {
-    var errorMessage = "Process to generate an artifact(s) for class " + getElementName(element) +
+    var errorMessage = "Generate an artifact(s) for class " + getElementName(element) +
         " marked with an annotation @" +  annotation.getSimpleName() + ". " +
         message.formatted(messageArguments);
     processingEnv.getMessager().printMessage(level, errorMessage);
@@ -191,7 +188,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     logError(element, sw.toString());
   }
 
-  protected void logErrorWhileGeneratingArtifact(Element element, GenerationTask generator, Exception ex) {
+  protected void logErrorWhileGeneratingArtifact(Element element, Generator generator, Exception ex) {
     var sw = new StringWriter();
     sw.write("Artifact generator " + generator.getClass().getCanonicalName() + ".\n");
     ex.printStackTrace(new PrintWriter(sw));
@@ -215,24 +212,17 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
 
   private record AnnotationProcessingState(
       AnnotationProcessingContextImpl context,
-      List<TaskDescription> deferredTasks
+      List<Task> deferredTasks
   ) {
     public AnnotationProcessingState() {
       this(new AnnotationProcessingContextImpl(), new LinkedList<>());
     }
-
-    private AnnotationProcessingState(
-        AnnotationProcessingContextImpl context, List<TaskDescription> deferredTasks
-    ) {
-      this.context = context;
-      this.deferredTasks = deferredTasks;
-    }
   }
 
-  private record TaskDescription(
+  private record Task(
       Class<? extends Annotation> annotation,
       TypeElement annotatedElement,
-      int numberTasks,
-      GenerationTask task
+      Generator generator,
+      int commonNumberTasks
   ) {}
 }

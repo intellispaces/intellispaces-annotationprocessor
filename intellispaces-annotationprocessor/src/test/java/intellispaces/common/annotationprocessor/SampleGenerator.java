@@ -1,17 +1,17 @@
 package intellispaces.common.annotationprocessor;
 
 import intellispaces.common.annotationprocessor.context.AnnotationProcessingContext;
-import intellispaces.common.annotationprocessor.generator.TemplateSourceArtifactGenerationTask;
+import intellispaces.common.annotationprocessor.generator.TemplatedGenerator;
 import intellispaces.common.javastatement.customtype.CustomType;
 
 import javax.annotation.processing.RoundEnvironment;
 import java.util.Map;
 
-public class GenerationTaskSample extends TemplateSourceArtifactGenerationTask {
+public class SampleGenerator extends TemplatedGenerator {
   private String sourceClassName;
   private String generatedClassName;
 
-  public GenerationTaskSample(CustomType annotatedType) {
+  public SampleGenerator(CustomType annotatedType) {
     super(annotatedType, annotatedType);
   }
 
