@@ -66,7 +66,7 @@ public class JavaArtifactContext {
 
   public String simpleNameOf(String canonicalName) {
     String simpleName = TypeFunctions.getSimpleName(canonicalName);
-    if (canonicalName.startsWith("java.lang.")) {
+    if (TypeFunctions.isDefaultClassName(canonicalName)) {
       return simpleName;
     }
     Set<String> set = imports.get(simpleName);
@@ -81,19 +81,23 @@ public class JavaArtifactContext {
   }
 
   public String addToImportAndGetSimpleName(String canonicalName) {
-    addImport(canonicalName);
+    if (!TypeFunctions.isDefaultClassName(canonicalName)) {
+      addImport(canonicalName);
+    }
     return simpleNameOf(canonicalName);
   }
 
   public String addToImportAndGetSimpleName(Class<?> aClass) {
-    addImport(aClass);
+    if (!TypeFunctions.isDefaultClass(aClass)) {
+      addImport(aClass);
+    }
     return simpleNameOf(aClass);
   }
 
   public List<String> getImports() {
     return imports.values().stream()
         .map(s -> s.iterator().next())
-        .filter(className -> !className.startsWith("java.lang."))
+        .filter(className -> !TypeFunctions.isDefaultClassName(className))
         .filter(className -> !className.equals(generatedClassCanonicalName))
         .sorted()
         .toList();
