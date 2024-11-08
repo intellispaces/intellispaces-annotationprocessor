@@ -2,7 +2,7 @@ package intellispaces.common.annotationprocessor.generator;
 
 import intellispaces.common.annotationprocessor.artifact.Artifact;
 import intellispaces.common.annotationprocessor.artifact.SourceArtifactImpl;
-import intellispaces.common.base.exception.UnexpectedViolationException;
+import intellispaces.common.base.exception.UnexpectedExceptions;
 import intellispaces.common.base.function.Functions;
 import intellispaces.common.base.resource.ResourceFunctions;
 import intellispaces.common.javastatement.customtype.CustomType;
@@ -72,7 +72,7 @@ public abstract class TemplatedGenerator implements Generator {
 
   private String synthesizeArtifact() throws Exception {
     Template template = TEMPLATE_CACHE.computeIfAbsent(templateName(),
-        Functions.coveredThrowableFunction(this::makeTemplate)
+        Functions.wrapThrowingFunction(this::makeTemplate)
     );
     return template.resolve(templateVariables());
   }
@@ -80,7 +80,7 @@ public abstract class TemplatedGenerator implements Generator {
   private Template makeTemplate(String templateName) throws Exception {
     String templateSource = ResourceFunctions.readResourceAsString(
         TemplatedGenerator.class, templateName()
-    ).orElseThrow(() -> UnexpectedViolationException.withMessage(
+    ).orElseThrow(() -> UnexpectedExceptions.withMessage(
         "Template for generate artifact is not found. Template name {0}", templateName())
     );
     return TemplateEngine.parseTemplate(templateSource);

@@ -6,7 +6,7 @@ import intellispaces.common.annotationprocessor.artifact.SourceArtifact;
 import intellispaces.common.annotationprocessor.context.AnnotationProcessingContextImpl;
 import intellispaces.common.annotationprocessor.generator.Generator;
 import intellispaces.common.annotationprocessor.validator.AnnotatedTypeValidator;
-import intellispaces.common.base.exception.UnexpectedViolationException;
+import intellispaces.common.base.exception.UnexpectedExceptions;
 import intellispaces.common.javastatement.JavaStatements;
 import intellispaces.common.javastatement.customtype.CustomType;
 
@@ -46,7 +46,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     this.annotation = annotation;
     for (ElementKind elementKind : applicableKinds) {
       if (!ENABLED_ELEMENT_KINDS.contains(elementKind)) {
-        throw UnexpectedViolationException.withMessage("Unsupported element kind {0}", elementKind);
+        throw UnexpectedExceptions.withMessage("Unsupported element kind {0}", elementKind);
       }
     }
     this.applicableKinds = applicableKinds;
@@ -148,7 +148,7 @@ public abstract class AnnotatedTypeProcessor extends AbstractProcessor {
     if (artifact.type() == ArtifactTypes.SourceArtifact) {
       writeJavaArtifact(annotatedElement, artifact.asSourceArtifact().orElseThrow());
     } else {
-      throw UnexpectedViolationException.withMessage("Unsupported artifact type " + artifact.type().name());
+      throw UnexpectedExceptions.withMessage("Unsupported artifact type " + artifact.type().name());
     }
   }
 

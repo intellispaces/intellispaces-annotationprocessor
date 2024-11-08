@@ -1,7 +1,9 @@
 package intellispaces.common.annotationprocessor.context;
 
-import intellispaces.common.base.exception.UnexpectedViolationException;
-import intellispaces.common.base.type.TypeFunctions;
+
+import intellispaces.common.base.exception.UnexpectedExceptions;
+import intellispaces.common.base.type.ClassFunctions;
+import intellispaces.common.base.type.ClassNameFunctions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +34,7 @@ public class JavaArtifactContext {
   }
 
   public void addImport(String canonicalName) {
-    String simpleName = TypeFunctions.getSimpleName(canonicalName);
+    String simpleName = ClassNameFunctions.getSimpleName(canonicalName);
     imports.computeIfAbsent(simpleName, k -> new LinkedHashSet<>()).add(canonicalName);
   }
 
@@ -53,11 +55,11 @@ public class JavaArtifactContext {
   }
 
   public String generatedClassSimpleName() {
-    return TypeFunctions.getSimpleName(generatedClassCanonicalName);
+    return ClassNameFunctions.getSimpleName(generatedClassCanonicalName);
   }
 
   public String packageName() {
-    return TypeFunctions.getPackageName(generatedClassCanonicalName);
+    return ClassNameFunctions.getPackageName(generatedClassCanonicalName);
   }
 
   public String simpleNameOf(Class<?> aClass) {
@@ -65,13 +67,13 @@ public class JavaArtifactContext {
   }
 
   public String simpleNameOf(String canonicalName) {
-    String simpleName = TypeFunctions.getSimpleName(canonicalName);
-    if (TypeFunctions.isDefaultClassName(canonicalName)) {
+    String simpleName = ClassNameFunctions.getSimpleName(canonicalName);
+    if (ClassFunctions.isStandardClass(canonicalName)) {
       return simpleName;
     }
     Set<String> set = imports.get(simpleName);
     if (set == null) {
-      throw UnexpectedViolationException.withMessage("Class {0} is missing from list of imported classes",
+      throw UnexpectedExceptions.withMessage("Class {0} is missing from list of imported classes",
           canonicalName);
     }
     if (canonicalName.equals(set.iterator().next())) {
@@ -81,14 +83,14 @@ public class JavaArtifactContext {
   }
 
   public String addToImportAndGetSimpleName(String canonicalName) {
-    if (!TypeFunctions.isDefaultClassName(canonicalName)) {
+    if (!ClassFunctions.isStandardClass(canonicalName)) {
       addImport(canonicalName);
     }
     return simpleNameOf(canonicalName);
   }
 
   public String addToImportAndGetSimpleName(Class<?> aClass) {
-    if (!TypeFunctions.isDefaultClass(aClass)) {
+    if (!ClassFunctions.isStandardClass(aClass)) {
       addImport(aClass);
     }
     return simpleNameOf(aClass);
@@ -97,7 +99,7 @@ public class JavaArtifactContext {
   public List<String> getImports() {
     return imports.values().stream()
         .map(s -> s.iterator().next())
-        .filter(className -> !TypeFunctions.isDefaultClassName(className))
+        .filter(className -> !ClassFunctions.isStandardClass(className))
         .filter(className -> !className.equals(generatedClassCanonicalName))
         .sorted()
         .toList();

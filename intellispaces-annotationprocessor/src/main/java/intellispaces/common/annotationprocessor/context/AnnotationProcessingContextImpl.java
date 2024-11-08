@@ -1,7 +1,7 @@
 package intellispaces.common.annotationprocessor.context;
 
 import intellispaces.common.annotationprocessor.generator.Generator;
-import intellispaces.common.base.exception.UnexpectedViolationException;
+import intellispaces.common.base.exception.UnexpectedExceptions;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class AnnotationProcessingContextImpl implements AnnotationProcessingCont
     SourceArtifactStatus status = map.computeIfAbsent(
         annotation, k -> new SourceArtifactStatus(commonNumberTasks));
     if (status.commonNumberTasks() != commonNumberTasks) {
-      throw UnexpectedViolationException.withMessage("Inconsistent common number of tasks");
+      throw UnexpectedExceptions.withMessage("Inconsistent common number of tasks");
     }
     status.processedTasks().add(generator);
   }
