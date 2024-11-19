@@ -2,9 +2,9 @@ package intellispaces.common.annotationprocessor.generator;
 
 import intellispaces.common.annotationprocessor.artifact.Artifact;
 import intellispaces.common.annotationprocessor.artifact.SourceArtifactImpl;
-import intellispaces.common.base.exception.UnexpectedExceptions;
-import intellispaces.common.base.function.Functions;
-import intellispaces.common.base.resource.ResourceFunctions;
+import tech.intellispaces.entity.exception.UnexpectedExceptions;
+import tech.intellispaces.entity.function.Functions;
+import tech.intellispaces.entity.resource.ResourceFunctions;
 import intellispaces.common.javastatement.customtype.CustomType;
 import intellispaces.common.templateengine.TemplateEngine;
 import intellispaces.common.templateengine.template.Template;

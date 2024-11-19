@@ -42,8 +42,8 @@
             <artifactId>intellispaces-templateengine</artifactId>
         </dependency>
         <dependency>
-            <groupId>intellispaces-common</groupId>
-            <artifactId>intellispaces-base</artifactId>
+            <groupId>tech.intellispaces.common</groupId>
+            <artifactId>intellispaces-entities</artifactId>
         </dependency>
 
         <!-- Logging -->
