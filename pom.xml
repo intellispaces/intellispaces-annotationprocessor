@@ -7,31 +7,31 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>intellispaces-common</groupId>
-    <artifactId>intellispaces-annotationprocessor-parent</artifactId>
+    <groupId>tech.intellispaces.common</groupId>
+    <artifactId>intellispaces-java-annotations-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>intellispaces-annotationprocessor-model</module>
-        <module>intellispaces-annotationprocessor</module>
+        <module>intellispaces-java-annotations-model</module>
+        <module>intellispaces-java-annotations</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <!-- Intellispaces -->
             <dependency>
-                <groupId>intellispaces-common</groupId>
-                <artifactId>intellispaces-annotationprocessor-model</artifactId>
+                <groupId>tech.intellispaces.common</groupId>
+                <artifactId>intellispaces-java-annotations-model</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>intellispaces-common</groupId>
-                <artifactId>intellispaces-javastatement</artifactId>
+                <groupId>tech.intellispaces.common</groupId>
+                <artifactId>intellispaces-java-reflection</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>intellispaces-common</groupId>
-                <artifactId>intellispaces-templateengine</artifactId>
+                <groupId>tech.intellispaces.common</groupId>
+                <artifactId>intellispaces-template-engine</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
