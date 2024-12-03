@@ -2,9 +2,9 @@ package tech.intellispaces.java.annotation.generator;
 
 import tech.intellispaces.java.annotation.artifact.Artifact;
 import tech.intellispaces.java.annotation.artifact.SourceArtifactImpl;
-import tech.intellispaces.entity.exception.UnexpectedExceptions;
-import tech.intellispaces.entity.function.Functions;
-import tech.intellispaces.entity.resource.ResourceFunctions;
+import tech.intellispaces.general.exception.UnexpectedExceptions;
+import tech.intellispaces.general.function.Functions;
+import tech.intellispaces.general.resource.ResourceFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.intellispaces.java.reflection.customtype.CustomType;

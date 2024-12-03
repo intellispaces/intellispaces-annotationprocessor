@@ -6,7 +6,7 @@ import tech.intellispaces.java.annotation.artifact.SourceArtifact;
 import tech.intellispaces.java.annotation.context.AnnotationProcessingContextImpl;
 import tech.intellispaces.java.annotation.generator.Generator;
 import tech.intellispaces.java.annotation.validator.AnnotatedTypeValidator;
-import tech.intellispaces.entity.exception.UnexpectedExceptions;
+import tech.intellispaces.general.exception.UnexpectedExceptions;
 import tech.intellispaces.java.reflection.JavaStatements;
 import tech.intellispaces.java.reflection.customtype.CustomType;
 

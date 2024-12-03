@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>tech.intellispaces.common</groupId>
-            <artifactId>intellispaces-entities</artifactId>
+            <artifactId>intellispaces-general</artifactId>
         </dependency>
 
         <!-- Logging -->

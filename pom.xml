@@ -36,7 +36,7 @@
             </dependency>
             <dependency>
                 <groupId>tech.intellispaces.common</groupId>
-                <artifactId>intellispaces-entities</artifactId>
+                <artifactId>intellispaces-general</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>

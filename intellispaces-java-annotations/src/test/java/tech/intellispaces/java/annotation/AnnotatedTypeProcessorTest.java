@@ -4,7 +4,7 @@ import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
-import tech.intellispaces.entity.resource.ResourceFunctions;
+import tech.intellispaces.general.resource.ResourceFunctions;
 import org.junit.Test;
 
 import javax.tools.JavaFileObject;

@@ -1,9 +1,9 @@
 package tech.intellispaces.java.annotation.context;
 
 
-import tech.intellispaces.entity.exception.UnexpectedExceptions;
-import tech.intellispaces.entity.type.ClassFunctions;
-import tech.intellispaces.entity.type.ClassNameFunctions;
+import tech.intellispaces.general.exception.UnexpectedExceptions;
+import tech.intellispaces.general.type.ClassFunctions;
+import tech.intellispaces.general.type.ClassNameFunctions;
 
 import java.util.ArrayList;
 import java.util.Collection;

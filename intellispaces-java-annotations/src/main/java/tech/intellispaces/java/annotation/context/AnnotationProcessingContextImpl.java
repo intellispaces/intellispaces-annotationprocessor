@@ -1,7 +1,7 @@
 package tech.intellispaces.java.annotation.context;
 
 import tech.intellispaces.java.annotation.generator.Generator;
-import tech.intellispaces.entity.exception.UnexpectedExceptions;
+import tech.intellispaces.general.exception.UnexpectedExceptions;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
