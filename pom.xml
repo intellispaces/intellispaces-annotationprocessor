@@ -8,12 +8,12 @@
     </parent>
 
     <groupId>tech.intellispaces.common</groupId>
-    <artifactId>intellispaces-java-annotations-parent</artifactId>
+    <artifactId>intellispaces-annotationprocessor-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>intellispaces-java-annotations-model</module>
-        <module>intellispaces-java-annotations</module>
+        <module>intellispaces-annotationprocessor-model</module>
+        <module>intellispaces-annotationprocessor</module>
     </modules>
 
     <dependencyManagement>
@@ -21,7 +21,7 @@
             <!-- Intellispaces -->
             <dependency>
                 <groupId>tech.intellispaces.common</groupId>
-                <artifactId>intellispaces-java-annotations-model</artifactId>
+                <artifactId>intellispaces-annotationprocessor-model</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
