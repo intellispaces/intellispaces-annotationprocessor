@@ -1,8 +1,9 @@
-package tech.intellispaces.annotationprocessor.context;
+package tech.intellispaces.annotationprocessor;
 
 import tech.intellispaces.general.exception.UnexpectedExceptions;
 import tech.intellispaces.general.type.ClassFunctions;
 import tech.intellispaces.general.type.ClassNameFunctions;
+import tech.intellispaces.java.reflection.customtype.CustomType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,18 +11,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class JavaArtifactContext {
-  private String generatedClassCanonicalName;
-  private final HashMap<String, Set<String>> imports = new HashMap<>();
+public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGenerator {
   private final Set<String> staticImports = new HashSet<>();
+  private final HashMap<String, Set<String>> imports = new HashMap<>();
   private final List<String> javaDocLines = new ArrayList<>();
+  private final Map<String, Object> templateVariables = new HashMap<>();
 
-  public void generatedClassCanonicalName(String canonicalName) {
-    this.generatedClassCanonicalName = canonicalName;
-    addImport(canonicalName);
+  public TemplatedJavaArtifactGenerator(CustomType annotatedType) {
+    super(annotatedType);
   }
 
   public void addImport(Class<?> aClass) {
@@ -47,18 +48,6 @@ public class JavaArtifactContext {
 
   public void addJavaDocLine(String line) {
     javaDocLines.add(line);
-  }
-
-  public String generatedClassCanonicalName() {
-    return generatedClassCanonicalName;
-  }
-
-  public String generatedClassSimpleName() {
-    return ClassNameFunctions.getSimpleName(generatedClassCanonicalName);
-  }
-
-  public String packageName() {
-    return ClassNameFunctions.getPackageName(generatedClassCanonicalName);
   }
 
   public String simpleNameOf(Class<?> aClass) {
@@ -95,16 +84,57 @@ public class JavaArtifactContext {
     return simpleNameOf(aClass);
   }
 
-  public List<String> getImports() {
+  public void addVariable(String name, Object value) {
+    templateVariables.put(name, value);
+  }
+
+  @Override
+  protected Map<String, Object> templateVariables() {
+    templateVariables.put("sourceArtifactName", sourceArtifactName());
+    templateVariables.put("sourceArtifactSimpleName", sourceArtifactSimpleName());
+    templateVariables.put("sourceArtifactPackageName", sourceArtifactPackageName());
+
+    templateVariables.put("generatedArtifactName", generatedArtifactName());
+    templateVariables.put("generatedArtifactSimpleName", generatedArtifactSimpleName());
+    templateVariables.put("generatedArtifactPackageName", generatedArtifactPackageName());
+
+    templateVariables.put("importedClasses", getImports());
+    return templateVariables;
+  }
+
+  public String sourceArtifactName() {
+    return sourceArtifact().canonicalName();
+  }
+
+  public String sourceArtifactSimpleName() {
+    if (sourceArtifact().isNested()) {
+      return simpleNameOf(sourceArtifactName());
+    }
+    return sourceArtifact().simpleName();
+  }
+
+  public String sourceArtifactPackageName() {
+    return sourceArtifact().packageName();
+  }
+
+  public String generatedArtifactSimpleName() {
+    return ClassNameFunctions.getSimpleName(generatedArtifactName());
+  }
+
+  public String generatedArtifactPackageName() {
+    return ClassNameFunctions.getPackageName(generatedArtifactName());
+  }
+
+  private List<String> getImports() {
     return imports.values().stream()
         .map(s -> s.iterator().next())
         .filter(className -> !ClassFunctions.isStandardClass(className))
-        .filter(className -> !className.equals(generatedClassCanonicalName))
+        .filter(className -> !className.startsWith(generatedArtifactPackageName() + "."))
         .sorted()
         .toList();
   }
 
-  public List<String> getStaticImports() {
+  private List<String> getStaticImports() {
     return staticImports.stream().sorted().toList();
   }
 }

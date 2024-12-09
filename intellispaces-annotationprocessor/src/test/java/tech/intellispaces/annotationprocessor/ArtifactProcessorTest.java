@@ -4,21 +4,21 @@ import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
-import tech.intellispaces.general.resource.ResourceFunctions;
 import org.junit.Test;
+import tech.intellispaces.general.resource.ResourceFunctions;
 
 import javax.tools.JavaFileObject;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Tests for {@link AnnotatedTypeProcessor}.
+ * Tests for {@link ArtifactProcessor}.
  */
-public class AnnotatedTypeProcessorTest {
+public class ArtifactProcessorTest {
 
   @Test
   public void test() {
     // Given
-    var annotationProcessor = new AnnotatedTypeProcessorSample();
+    var annotationProcessor = new ArtifactProcessorSample();
 
     // When
     Compiler compiler = Compiler.javac().withProcessors(annotationProcessor);
@@ -30,6 +30,6 @@ public class AnnotatedTypeProcessorTest {
     CompilationSubject.assertThat(compilation)
         .generatedSourceFile("intellispaces.framework.annotationprocessor.GeneratedSample")
         .contentsAsString(StandardCharsets.UTF_8)
-        .isEqualTo(ResourceFunctions.readResourceAsStringForce(AnnotatedTypeProcessorTest.class, "/GeneratedSample.java"));
+        .isEqualTo(ResourceFunctions.readResourceAsStringForce(ArtifactProcessorTest.class, "/GeneratedSample.java"));
   }
 }

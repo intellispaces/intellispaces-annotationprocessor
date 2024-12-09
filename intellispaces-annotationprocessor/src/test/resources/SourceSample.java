@@ -1,4 +1,4 @@
-package intellispaces.framework.annotationprocessor;
+package tech.intellispaces.framework.annotationprocessor;
 
 import tech.intellispaces.annotationprocessor.AnnotationSample;
 
