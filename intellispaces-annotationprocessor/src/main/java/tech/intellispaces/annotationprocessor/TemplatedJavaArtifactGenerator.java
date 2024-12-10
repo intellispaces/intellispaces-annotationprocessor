@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGenerator {
   private final Set<String> staticImports = new HashSet<>();
-  private final HashMap<String, Set<String>> imports = new HashMap<>();
+  private final HashMap<String, String> imports = new HashMap<>();
   private final List<String> javaDocLines = new ArrayList<>();
   private final Map<String, Object> templateVariables = new HashMap<>();
 
@@ -34,8 +34,11 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
   }
 
   public void addImport(String canonicalName) {
+    if (ClassFunctions.isLanguageClass(canonicalName)) {
+      return;
+    }
     String simpleName = ClassNameFunctions.getSimpleName(canonicalName);
-    imports.computeIfAbsent(simpleName, k -> new LinkedHashSet<>()).add(canonicalName);
+    imports.putIfAbsent(simpleName, canonicalName);
   }
 
   public Consumer<String> getImportConsumer() {
@@ -56,31 +59,31 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
 
   public String simpleNameOf(String canonicalName) {
     String simpleName = ClassNameFunctions.getSimpleName(canonicalName);
-    if (ClassFunctions.isStandardClass(canonicalName)) {
+    if (ClassFunctions.isLanguageClass(canonicalName)) {
       return simpleName;
     }
-    Set<String> set = imports.get(simpleName);
-    if (set == null) {
+    if (simpleName.equals(generatedArtifactSimpleName())) {
+      return canonicalName;
+    }
+
+    String importedCanonicalName = imports.get(simpleName);
+    if (importedCanonicalName == null) {
       throw UnexpectedExceptions.withMessage("Class {0} is missing from list of imported classes",
           canonicalName);
     }
-    if (canonicalName.equals(set.iterator().next())) {
+    if (canonicalName.equals(importedCanonicalName)) {
       return simpleName;
     }
     return canonicalName;
   }
 
   public String addToImportAndGetSimpleName(String canonicalName) {
-    if (!ClassFunctions.isStandardClass(canonicalName)) {
-      addImport(canonicalName);
-    }
+    addImport(canonicalName);
     return simpleNameOf(canonicalName);
   }
 
   public String addToImportAndGetSimpleName(Class<?> aClass) {
-    if (!ClassFunctions.isStandardClass(aClass)) {
-      addImport(aClass);
-    }
+    addImport(aClass);
     return simpleNameOf(aClass);
   }
 
@@ -127,8 +130,8 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
 
   private List<String> getImports() {
     return imports.values().stream()
-        .map(s -> s.iterator().next())
-        .filter(className -> !ClassFunctions.isStandardClass(className))
+        .filter(className -> !ClassNameFunctions.getSimpleName(className).equals(generatedArtifactSimpleName()))
+        .filter(className -> !ClassFunctions.isLanguageClass(className))
         .filter(className -> !className.startsWith(generatedArtifactPackageName() + "."))
         .sorted()
         .toList();
