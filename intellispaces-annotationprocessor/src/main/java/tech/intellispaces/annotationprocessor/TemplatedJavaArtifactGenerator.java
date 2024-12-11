@@ -132,7 +132,7 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
     return imports.values().stream()
         .filter(className -> !ClassNameFunctions.getSimpleName(className).equals(generatedArtifactSimpleName()))
         .filter(className -> !ClassFunctions.isLanguageClass(className))
-        .filter(className -> !className.startsWith(generatedArtifactPackageName() + "."))
+        .filter(className -> !ClassNameFunctions.getPackageName(className).equals(generatedArtifactPackageName()))
         .sorted()
         .toList();
   }
