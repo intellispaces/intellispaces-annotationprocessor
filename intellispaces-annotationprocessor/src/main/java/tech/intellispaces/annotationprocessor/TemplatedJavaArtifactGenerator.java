@@ -3,6 +3,7 @@ package tech.intellispaces.annotationprocessor;
 import tech.intellispaces.general.exception.UnexpectedExceptions;
 import tech.intellispaces.general.type.ClassFunctions;
 import tech.intellispaces.general.type.ClassNameFunctions;
+import tech.intellispaces.general.type.PrimitiveFunctions;
 import tech.intellispaces.java.reflection.customtype.CustomType;
 
 import java.util.ArrayList;
@@ -130,8 +131,9 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
   private List<String> getImports() {
     return imports.values().stream()
         .filter(className -> !ClassNameFunctions.getSimpleName(className).equals(generatedArtifactSimpleName()))
-        .filter(className -> !ClassFunctions.isLanguageClass(className))
         .filter(className -> !ClassNameFunctions.getPackageName(className).equals(generatedArtifactPackageName()))
+        .filter(className -> !ClassFunctions.isLanguageClass(className))
+        .filter(className -> !PrimitiveFunctions.isPrimitiveTypename(className))
         .sorted()
         .toList();
   }
