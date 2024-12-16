@@ -6,6 +6,7 @@ import tech.intellispaces.general.type.ClassNameFunctions;
 import tech.intellispaces.general.type.PrimitiveFunctions;
 import tech.intellispaces.java.reflection.customtype.CustomType;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
 public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGenerator {
   private final Set<String> staticImports = new HashSet<>();
   private final HashMap<String, String> imports = new HashMap<>();
@@ -23,6 +26,7 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
 
   public TemplatedJavaArtifactGenerator(CustomType annotatedType) {
     super(annotatedType);
+    addImport(Generated.class);
   }
 
   public void addImport(Class<?> aClass) {
@@ -102,6 +106,8 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
     templateVariables.put("generatedArtifactPackageName", generatedArtifactPackageName());
 
     templateVariables.put("importedClasses", getImports());
+
+    templateVariables.put("generatedAnnotation", buildGeneratedAnnotation());
     return templateVariables;
   }
 
@@ -140,5 +146,21 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
 
   private List<String> getStaticImports() {
     return staticImports.stream().sorted().toList();
+  }
+
+  private String buildGeneratedAnnotation() {
+    return """
+      @%s(
+        source = "%s",
+        library = "%s",
+        generator = "%s",
+        date = "%s"
+      )""".formatted(
+        simpleNameOf(Generated.class),
+        sourceArtifact().canonicalName(),
+        ClassFunctions.getJavaLibraryName(this.getClass()),
+        this.getClass().getCanonicalName(),
+        ZonedDateTime.now().format(ISO_OFFSET_DATE_TIME)
+    );
   }
 }
