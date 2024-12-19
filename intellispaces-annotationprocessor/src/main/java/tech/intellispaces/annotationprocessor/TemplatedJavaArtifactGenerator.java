@@ -1,5 +1,6 @@
 package tech.intellispaces.annotationprocessor;
 
+import tech.intellispaces.general.collection.ArraysFunctions;
 import tech.intellispaces.general.exception.UnexpectedExceptions;
 import tech.intellispaces.general.type.ClassFunctions;
 import tech.intellispaces.general.type.ClassNameFunctions;
@@ -8,7 +9,6 @@ import tech.intellispaces.java.reflection.customtype.CustomType;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,8 +33,8 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
     addImport(aClass.getName());
   }
 
-  public void addImports(Collection<String> canonicalNames) {
-    canonicalNames.forEach(this::addImport);
+  public void addImports(Class<?>... classes) {
+    ArraysFunctions.foreach(classes, this::addImport);
   }
 
   public void addImport(String canonicalName) {
