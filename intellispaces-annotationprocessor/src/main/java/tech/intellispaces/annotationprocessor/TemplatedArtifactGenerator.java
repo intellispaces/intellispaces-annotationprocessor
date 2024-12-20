@@ -71,9 +71,7 @@ public abstract class TemplatedArtifactGenerator implements ArtifactGenerator {
   private Template makeTemplate(String templateName) throws Exception {
     String templateSource = ResourceFunctions.readResourceAsString(
         TemplatedArtifactGenerator.class, templateName()
-    ).orElseThrow(() -> UnexpectedExceptions.withMessage(
-        "Template for generate artifact is not found. Template name {0}", templateName())
-    );
+    ).orElseThrow(() -> UnexpectedExceptions.withMessage("Artifact template {0} is not found", templateName));
     return TemplateEngine.parseTemplate(templateSource);
   }
 }
