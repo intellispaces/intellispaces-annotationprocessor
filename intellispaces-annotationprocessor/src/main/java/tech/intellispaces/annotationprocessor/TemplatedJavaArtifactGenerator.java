@@ -129,7 +129,7 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
       )""".formatted(
         simpleNameOf(Generated.class),
         sourceArtifact().canonicalName(),
-        ClassFunctions.getJavaLibraryName(this.getClass()),
+        ClassFunctions.getJavaLibraryName(this.getClass()).orElse("<Unknown>"),
         this.getClass().getCanonicalName(),
         ZonedDateTime.now().format(ISO_OFFSET_DATE_TIME)
     );
