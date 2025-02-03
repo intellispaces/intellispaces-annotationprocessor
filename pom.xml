@@ -11,36 +11,36 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>tech.intellispaces.common</groupId>
-    <artifactId>intellispaces-annotationprocessor-parent</artifactId>
+    <groupId>tech.intellispaces.commons</groupId>
+    <artifactId>intellispaces-commons-annotation-processor-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>intellispaces-annotationprocessor-model</module>
-        <module>intellispaces-annotationprocessor</module>
+        <module>intellispaces-commons-annotation-processor-model</module>
+        <module>intellispaces-commons-annotation-processor</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <!-- Intellispaces -->
             <dependency>
-                <groupId>tech.intellispaces.common</groupId>
-                <artifactId>intellispaces-annotationprocessor-model</artifactId>
+                <groupId>tech.intellispaces.commons</groupId>
+                <artifactId>intellispaces-commons-annotation-processor-model</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>tech.intellispaces.common</groupId>
-                <artifactId>intellispaces-java-reflection</artifactId>
+                <groupId>tech.intellispaces.commons</groupId>
+                <artifactId>intellispaces-commons-java-reflection</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>tech.intellispaces.common</groupId>
-                <artifactId>intellispaces-template-engine</artifactId>
+                <groupId>tech.intellispaces.commons</groupId>
+                <artifactId>intellispaces-commons-template-engine</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>tech.intellispaces.common</groupId>
-                <artifactId>intellispaces-general</artifactId>
+                <groupId>tech.intellispaces.commons</groupId>
+                <artifactId>intellispaces-commons-base</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
