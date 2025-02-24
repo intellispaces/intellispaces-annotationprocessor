@@ -113,17 +113,17 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
   private void createTasks(CustomType source, RoundEnvironment roundEnv) {
     var context = new ArtifactGeneratorContextImpl(roundEnv, PROCESSING_CONTEXT);
     List<ArtifactGenerator> generators = makeGenerators(source, context);
-    List<Task> tasks = generators.stream()
-      .map(generator -> new Task(generator, context, source, annotation))
+    List<GenerationTask> tasks = generators.stream()
+      .map(generator -> new GenerationTask(source, annotation, generator, context))
       .toList();
     PROCESSING_CONTEXT.addTasks(source, annotation, tasks);
   }
 
   private void processTasks() {
     boolean anyTaskExecuted = false;
-    Iterator<Task> iterator = PROCESSING_CONTEXT.allTasks().iterator();
+    Iterator<GenerationTask> iterator = PROCESSING_CONTEXT.allTasks().iterator();
     while (iterator.hasNext()) {
-      Task task = iterator.next();
+      GenerationTask task = iterator.next();
       ArtifactGenerator generator = task.generator();
       ArtifactGeneratorContext context = task.context();
       if (generator.isRelevant(context)) {
@@ -138,7 +138,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     }
   }
 
-  private void executeTask(Task task) {
+  private void executeTask(GenerationTask task) {
     ArtifactGenerator generator = task.generator();
     if (PROCESSING_CONTEXT.isAlreadyGenerated(generator.generatedArtifactName())) {
       log(Diagnostic.Kind.NOTE, task.source(), "Artifact %s has already been generated before",

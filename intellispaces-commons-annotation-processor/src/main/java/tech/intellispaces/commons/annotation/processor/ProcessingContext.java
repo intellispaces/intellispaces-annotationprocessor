@@ -11,15 +11,15 @@ import java.util.Map;
 import java.util.Set;
 
 class ProcessingContext {
-  private final List<Task> allTasks = new ArrayList<>();
+  private final List<GenerationTask> allTasks = new ArrayList<>();
   private final Set<String> generatedArtifacts = new HashSet<>();
   private final Map<String, Map<Class<? extends Annotation>, AnnotatedTypeProcessingContext>> artifactStatuses = new HashMap<>();
 
-  public Iterable<Task> allTasks() {
+  public Iterable<GenerationTask> allTasks() {
     return allTasks;
   }
 
-  public void addTasks(CustomType source, Class<? extends Annotation> annotation, List<Task> tasks) {
+  public void addTasks(CustomType source, Class<? extends Annotation> annotation, List<GenerationTask> tasks) {
     var artifactProcessingContext = new AnnotatedTypeProcessingContext(source, annotation, tasks);
     Map<Class<? extends Annotation>, AnnotatedTypeProcessingContext> annotationToContextIndex = new HashMap<>();
     annotationToContextIndex.put(annotation, artifactProcessingContext);
@@ -28,7 +28,7 @@ class ProcessingContext {
     this.allTasks.addAll(tasks);
   }
 
-  public void finishTask(Task task) {
+  public void finishTask(GenerationTask task) {
     ArtifactGenerator generator = task.generator();
 
     generatedArtifacts.add(generator.generatedArtifactName());
@@ -61,13 +61,13 @@ class ProcessingContext {
   private static final class AnnotatedTypeProcessingContext {
     private final CustomType source;
     private final Class<? extends Annotation> annotation;
-    private final List<Task> tasks;
+    private final List<GenerationTask> tasks;
     private int numberProcessedTasks;
 
     AnnotatedTypeProcessingContext(
         CustomType source,
         Class<? extends Annotation> annotation,
-        List<Task> tasks
+        List<GenerationTask> tasks
     ) {
       this.source = source;
       this.annotation = annotation;
@@ -82,7 +82,7 @@ class ProcessingContext {
       return annotation;
     }
 
-    List<Task> tasks() {
+    List<GenerationTask> tasks() {
       return tasks;
     }
 

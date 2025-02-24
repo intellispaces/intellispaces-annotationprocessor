@@ -5,17 +5,17 @@ import tech.intellispaces.commons.java.reflection.customtype.CustomType;
 import java.lang.annotation.Annotation;
 
 /**
- * The task to run the artifact generator.
+ * The task to generate new artifact.
  *
- * @param generator the generator that needs to be run.
- * @param context the generator context.
  * @param source the source artifact related to this task.
  * @param annotation the annotation of the source artifact related to this task.
+ * @param generator the generator that needs to be run.
+ * @param context the generator context.
  */
-record Task(
-    ArtifactGenerator generator,
-    ArtifactGeneratorContext context,
+record GenerationTask(
     CustomType source,
-    Class<? extends Annotation> annotation
+    Class<? extends Annotation> annotation,
+    ArtifactGenerator generator,
+    ArtifactGeneratorContext context
 ) {
 }

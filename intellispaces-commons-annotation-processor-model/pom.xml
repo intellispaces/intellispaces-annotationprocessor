@@ -2,7 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <description>
-        The annotation processing library to generate source code. The model module.
+        The library processes annotated source code (classes, interfaces, records, enumerations, or annotations) to generate new code artifacts.
+        The model module.
     </description>
 
     <parent>
