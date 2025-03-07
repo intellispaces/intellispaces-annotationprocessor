@@ -1,7 +1,7 @@
 package tech.intellispaces.commons.annotation.processor;
 
-import tech.intellispaces.commons.base.type.ClassFunctions;
-import tech.intellispaces.commons.base.type.ClassNameFunctions;
+import tech.intellispaces.commons.type.ClassFunctions;
+import tech.intellispaces.commons.type.ClassNameFunctions;
 import tech.intellispaces.commons.java.reflection.customtype.CustomType;
 import tech.intellispaces.commons.java.reflection.customtype.ImportLists;
 import tech.intellispaces.commons.java.reflection.customtype.MutableImportList;
