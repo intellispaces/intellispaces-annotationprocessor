@@ -1,10 +1,10 @@
 package tech.intellispaces.commons.annotation.processor;
 
+import tech.intellispaces.commons.reflection.customtype.CustomType;
+import tech.intellispaces.commons.reflection.customtype.ImportLists;
+import tech.intellispaces.commons.reflection.customtype.MutableImportList;
 import tech.intellispaces.commons.type.ClassFunctions;
 import tech.intellispaces.commons.type.ClassNameFunctions;
-import tech.intellispaces.commons.java.reflection.customtype.CustomType;
-import tech.intellispaces.commons.java.reflection.customtype.ImportLists;
-import tech.intellispaces.commons.java.reflection.customtype.MutableImportList;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

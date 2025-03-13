@@ -1,6 +1,6 @@
 package tech.intellispaces.commons.annotation.processor;
 
-import tech.intellispaces.commons.java.reflection.customtype.CustomType;
+import tech.intellispaces.commons.reflection.customtype.CustomType;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;

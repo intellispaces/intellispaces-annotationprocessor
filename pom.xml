@@ -31,7 +31,7 @@
             </dependency>
             <dependency>
                 <groupId>tech.intellispaces.commons</groupId>
-                <artifactId>intellispaces-commons-java-reflection</artifactId>
+                <artifactId>intellispaces-commons-reflection</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

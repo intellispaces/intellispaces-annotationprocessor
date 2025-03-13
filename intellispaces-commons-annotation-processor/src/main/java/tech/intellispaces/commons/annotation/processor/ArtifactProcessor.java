@@ -1,8 +1,8 @@
 package tech.intellispaces.commons.annotation.processor;
 
 import tech.intellispaces.commons.exception.UnexpectedExceptions;
-import tech.intellispaces.commons.java.reflection.JavaStatements;
-import tech.intellispaces.commons.java.reflection.customtype.CustomType;
+import tech.intellispaces.commons.reflection.JavaStatements;
+import tech.intellispaces.commons.reflection.customtype.CustomType;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
