@@ -2,6 +2,7 @@ package tech.intellispaces.commons.annotation.processor;
 
 import tech.intellispaces.commons.reflection.customtype.CustomType;
 
+import javax.annotation.processing.RoundEnvironment;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,13 +11,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class ProcessingContext {
-  private final List<GenerationTask> allTasks = new ArrayList<>();
+class ProcessorContext {
+  private final List<RoundEnvironment> roundEnvironments = new ArrayList<>();
+  private final List<GenerationTask> tasks = new ArrayList<>();
   private final Set<String> generatedArtifacts = new HashSet<>();
-  private final Map<String, Map<Class<? extends Annotation>, AnnotatedTypeProcessingContext>> artifactStatuses = new HashMap<>();
+  private final Map<String, Map<Class<? extends Annotation>, AnnotatedTypeProcessingContext>> artifactStatuses = (
+      new HashMap<>()
+  );
+
+  public List<RoundEnvironment> roundEnvironments() {
+    return roundEnvironments;
+  }
+
+  public int numberTasks() {
+    return tasks.size();
+  }
 
   public Iterable<GenerationTask> allTasks() {
-    return allTasks;
+    return tasks;
   }
 
   public void addTasks(CustomType source, Class<? extends Annotation> annotation, List<GenerationTask> tasks) {
@@ -25,7 +37,7 @@ class ProcessingContext {
     annotationToContextIndex.put(annotation, artifactProcessingContext);
     artifactStatuses.put(source.canonicalName(), annotationToContextIndex);
 
-    this.allTasks.addAll(tasks);
+    this.tasks.addAll(tasks);
   }
 
   public void finishTask(GenerationTask task) {

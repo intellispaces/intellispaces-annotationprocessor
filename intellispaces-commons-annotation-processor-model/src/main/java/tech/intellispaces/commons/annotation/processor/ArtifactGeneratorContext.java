@@ -5,7 +5,9 @@ import java.lang.annotation.Annotation;
 
 public interface ArtifactGeneratorContext {
 
-  RoundEnvironment roundEnvironment();
+  RoundEnvironment initialRoundEnvironment();
+
+  RoundEnvironment activeRoundEnvironment();
 
   boolean isProcessingFinished(String sourceArtifactName, Class<? extends Annotation> annotation);
 

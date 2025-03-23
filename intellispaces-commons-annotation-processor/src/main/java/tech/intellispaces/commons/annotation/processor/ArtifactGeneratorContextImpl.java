@@ -4,26 +4,29 @@ import javax.annotation.processing.RoundEnvironment;
 import java.lang.annotation.Annotation;
 
 class ArtifactGeneratorContextImpl implements ArtifactGeneratorContext {
-  private final RoundEnvironment roundEnvironment;
-  private final ProcessingContext processingContext;
+  private final ProcessorContext processorContext;
 
-  public ArtifactGeneratorContextImpl(RoundEnvironment roundEnvironment, ProcessingContext processingContext) {
-    this.roundEnvironment = roundEnvironment;
-    this.processingContext = processingContext;
+  public ArtifactGeneratorContextImpl(ProcessorContext processorContext) {
+    this.processorContext = processorContext;
   }
 
   @Override
-  public RoundEnvironment roundEnvironment() {
-    return roundEnvironment;
+  public RoundEnvironment initialRoundEnvironment() {
+    return processorContext.roundEnvironments().get(0);
+  }
+
+  @Override
+  public RoundEnvironment activeRoundEnvironment() {
+    return processorContext.roundEnvironments().get(processorContext.roundEnvironments().size() - 1);
   }
 
   @Override
   public boolean isProcessingFinished(String sourceArtifactName, Class<? extends Annotation> annotation) {
-    return processingContext.isProcessingFinished(sourceArtifactName, annotation);
+    return processorContext.isProcessingFinished(sourceArtifactName, annotation);
   }
 
   @Override
   public boolean isGenerated(String generatedArtifactName) {
-    return processingContext.isAlreadyGenerated(generatedArtifactName);
+    return processorContext.isAlreadyGenerated(generatedArtifactName);
   }
 }

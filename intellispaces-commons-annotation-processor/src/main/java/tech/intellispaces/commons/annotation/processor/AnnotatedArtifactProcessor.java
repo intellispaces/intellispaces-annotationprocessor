@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +27,12 @@ import java.util.Set;
 /**
  * The processor of annotated class, interface, record, enum or annotation artifacts.
  */
-public abstract class ArtifactProcessor extends AbstractProcessor {
+public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
   private final Class<? extends Annotation> annotation;
   private final Set<ElementKind> applicableKinds;
   private final SourceVersion sourceVersion;
 
-  public ArtifactProcessor(
+  public AnnotatedArtifactProcessor(
       ElementKind applicableKind,
       Class<? extends Annotation> annotation,
       SourceVersion sourceVersion
@@ -39,7 +40,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     this(Set.of(applicableKind), annotation, sourceVersion);
   }
 
-  public ArtifactProcessor(
+  public AnnotatedArtifactProcessor(
       Set<ElementKind> applicableKinds,
       Class<? extends Annotation> annotation,
       SourceVersion sourceVersion
@@ -62,7 +63,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
   public abstract ArtifactValidator validator();
 
   /**
-   * Creates artifact generators.
+   * Creates new artifact generators.
    *
    * @param source the source artifact.
    * @param context the generator context.
@@ -81,16 +82,24 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
   }
 
   @Override
-  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(annotation)) {
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
+    CONTEXT.roundEnvironments().add(roundEnvironment);
+
+    for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(annotation)) {
       if (applicableKinds.contains(annotatedElement.getKind())) {
-        processAnnotatedElement((TypeElement) annotatedElement, roundEnv);
+        processAnnotatedElement((TypeElement) annotatedElement);
       }
+    }
+
+    runGenerators();
+
+    if (isLastRound(roundEnvironment)) {
+      checkRemainingGenerators();
     }
     return true;
   }
 
-  private void processAnnotatedElement(TypeElement annotatedElement, RoundEnvironment roundEnv) {
+  private void processAnnotatedElement(TypeElement annotatedElement) {
     CustomType source = JavaStatements.customTypeStatement(annotatedElement);
     try {
       if (!isApplicable(source)) {
@@ -102,45 +111,46 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
         validator.validate(source);
       }
 
-      createTasks(source, roundEnv);
-
-      processTasks();
+      log(Diagnostic.Kind.NOTE, "Create new artifact generators for origin artifact %s", source.canonicalName());
+      createGenerators(source);
     } catch (Exception e) {
       logError(source, e);
     }
   }
 
-  private void createTasks(CustomType source, RoundEnvironment roundEnv) {
-    var context = new ArtifactGeneratorContextImpl(roundEnv, PROCESSING_CONTEXT);
+  private void createGenerators(CustomType source) {
+    var context = new ArtifactGeneratorContextImpl(CONTEXT);
     List<ArtifactGenerator> generators = makeGenerators(source, context);
     List<GenerationTask> tasks = generators.stream()
       .map(generator -> new GenerationTask(source, annotation, generator, context))
       .toList();
-    PROCESSING_CONTEXT.addTasks(source, annotation, tasks);
+    CONTEXT.addTasks(source, annotation, tasks);
   }
 
-  private void processTasks() {
+  private void runGenerators() {
     boolean anyTaskExecuted = false;
-    Iterator<GenerationTask> iterator = PROCESSING_CONTEXT.allTasks().iterator();
+    Iterator<GenerationTask> iterator = CONTEXT.allTasks().iterator();
     while (iterator.hasNext()) {
       GenerationTask task = iterator.next();
       ArtifactGenerator generator = task.generator();
-      ArtifactGeneratorContext context = task.context();
+      var context = (ArtifactGeneratorContextImpl) task.context();
       if (generator.isRelevant(context)) {
         iterator.remove();
-        executeTask(task);
-        PROCESSING_CONTEXT.finishTask(task);
+        runGenerator(task);
+        CONTEXT.finishTask(task);
         anyTaskExecuted = true;
       }
     }
+
+    // Re-run remaining generators, as the context may have changed
     if (anyTaskExecuted) {
-      processTasks();
+      runGenerators();
     }
   }
 
-  private void executeTask(GenerationTask task) {
+  private void runGenerator(GenerationTask task) {
     ArtifactGenerator generator = task.generator();
-    if (PROCESSING_CONTEXT.isAlreadyGenerated(generator.generatedArtifactName())) {
+    if (CONTEXT.isAlreadyGenerated(generator.generatedArtifactName())) {
       log(Diagnostic.Kind.NOTE, task.source(), "Artifact %s has already been generated before",
           generator.generatedArtifactName());
       return;
@@ -148,6 +158,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
     final Optional<Artifact> generatedArtifact;
     try {
+      log(Diagnostic.Kind.NOTE, "Start to generate artifact %s", generator.generatedArtifactName());
       generatedArtifact = generator.generate(task.context());
     } catch (Exception e) {
       logErrorWhileGeneratingArtifact(task.source(), generator, e);
@@ -178,19 +189,40 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     }
   }
 
+  private boolean isLastRound(RoundEnvironment roundEnvironment) {
+    return roundEnvironment.processingOver();
+  }
+
+  private void checkRemainingGenerators() {
+    if (CONTEXT.numberTasks() > 0) {
+      var sb = new StringBuilder();
+      CONTEXT.allTasks().forEach(t -> sb
+          .append("Generator ").append(t.generator().getClass().getCanonicalName())
+          .append(". Generated artifact ").append(t.generator().generatedArtifactName())
+          .append("\n")
+      );
+      log(Diagnostic.Kind.ERROR, "There are still not run generators: " + sb);
+    }
+  }
+
+  protected void log(Diagnostic.Kind level, String message, Object... messageArguments) {
+    var fullMessage = "[" + new Date() + "] " + message.formatted(messageArguments);
+    processingEnv.getMessager().printMessage(level, fullMessage);
+  }
+
+  protected void log(Diagnostic.Kind level, CustomType source, String message, Object... messageArguments) {
+    var fullMessage = "Generate an artifact(s) for class " + source.canonicalName() +
+        " marked with an annotation @" +  annotation.getSimpleName() + ". " +
+        message.formatted(messageArguments);
+    log(level, fullMessage);
+  }
+
   protected void logMandatoryWarning(CustomType source, String message, Object... messageArguments) {
     log(Diagnostic.Kind.MANDATORY_WARNING, source, message, messageArguments);
   }
 
   protected void logError(CustomType source, String message, Object... messageArguments) {
     log(Diagnostic.Kind.ERROR, source, message, messageArguments);
-  }
-
-  protected void log(Diagnostic.Kind level, CustomType source, String message, Object... messageArguments) {
-    var errorMessage = "Generate an artifact(s) for class " + source.canonicalName() +
-        " marked with an annotation @" +  annotation.getSimpleName() + ". " +
-        message.formatted(messageArguments);
-    processingEnv.getMessager().printMessage(level, errorMessage);
   }
 
   protected void logError(CustomType source, Exception ex) {
@@ -213,7 +245,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     logError(source, sw.toString());
   }
 
-  private static final ProcessingContext PROCESSING_CONTEXT = new ProcessingContext();
+  private static final ProcessorContext CONTEXT = new ProcessorContext();
 
   private static final Set<ElementKind> ALLOWABLE_ELEMENT_KINDS = Set.of(
       ElementKind.CLASS,
