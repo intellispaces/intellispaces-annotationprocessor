@@ -11,14 +11,14 @@ import javax.tools.JavaFileObject;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Tests for {@link AnnotatedArtifactProcessor}.
+ * Tests for {@link ArtifactProcessor}.
  */
-public class AnnotatedArtifactProcessorTest {
+public class ArtifactProcessorTest {
 
   @Test
   public void test() {
     // Given
-    var annotationProcessor = new AnnotatedArtifactProcessorSample();
+    var annotationProcessor = new ArtifactProcessorSample();
 
     // When
     Compiler compiler = Compiler.javac().withProcessors(annotationProcessor);
@@ -30,6 +30,6 @@ public class AnnotatedArtifactProcessorTest {
     CompilationSubject.assertThat(compilation)
         .generatedSourceFile("intellispaces.framework.annotationprocessor.GeneratedSample")
         .contentsAsString(StandardCharsets.UTF_8)
-        .isEqualTo(ResourceFunctions.readResourceAsStringForce(AnnotatedArtifactProcessorTest.class, "/GeneratedSample.java"));
+        .isEqualTo(ResourceFunctions.readResourceAsStringForce(ArtifactProcessorTest.class, "/GeneratedSample.java"));
   }
 }

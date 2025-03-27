@@ -7,9 +7,9 @@ import javax.lang.model.element.ElementKind;
 import java.util.List;
 import java.util.Set;
 
-public class AnnotatedArtifactProcessorSample extends AnnotatedArtifactProcessor {
+public class ArtifactProcessorSample extends ArtifactProcessor {
 
-  public AnnotatedArtifactProcessorSample() {
+  public ArtifactProcessorSample() {
     super(Set.of(ElementKind.INTERFACE), AnnotationSample.class, SourceVersion.RELEASE_17);
   }
 

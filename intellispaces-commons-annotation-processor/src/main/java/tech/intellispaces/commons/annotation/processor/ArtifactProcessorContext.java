@@ -11,16 +11,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class ProcessorContext {
+class ArtifactProcessorContext {
   private final List<RoundEnvironment> roundEnvironments = new ArrayList<>();
   private final List<GenerationTask> tasks = new ArrayList<>();
   private final Set<String> generatedArtifacts = new HashSet<>();
   private final Map<String, Map<Class<? extends Annotation>, AnnotatedTypeProcessingContext>> artifactStatuses = (
       new HashMap<>()
   );
+  private boolean penaltyRound;
 
   public List<RoundEnvironment> roundEnvironments() {
     return roundEnvironments;
+  }
+
+  public boolean isPenaltyRound() {
+    return penaltyRound;
+  }
+
+  public void setPenaltyRound(boolean penaltyRound) {
+    this.penaltyRound = penaltyRound;
   }
 
   public int numberTasks() {

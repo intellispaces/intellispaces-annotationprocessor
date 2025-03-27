@@ -1,12 +1,15 @@
 package tech.intellispaces.commons.annotation.processor;
 
+import tech.intellispaces.commons.collection.CollectionFunctions;
+
 import javax.annotation.processing.RoundEnvironment;
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 class ArtifactGeneratorContextImpl implements ArtifactGeneratorContext {
-  private final ProcessorContext processorContext;
+  private final ArtifactProcessorContext processorContext;
 
-  public ArtifactGeneratorContextImpl(ProcessorContext processorContext) {
+  public ArtifactGeneratorContextImpl(ArtifactProcessorContext processorContext) {
     this.processorContext = processorContext;
   }
 
@@ -28,5 +31,22 @@ class ArtifactGeneratorContextImpl implements ArtifactGeneratorContext {
   @Override
   public boolean isGenerated(String generatedArtifactName) {
     return processorContext.isAlreadyGenerated(generatedArtifactName);
+  }
+
+  @Override
+  public List<ArtifactGenerator> generatorQueue() {
+    return CollectionFunctions.toList(processorContext.allTasks().iterator()).stream()
+        .map(GenerationTask::generator)
+        .toList();
+  }
+
+  @Override
+  public boolean isPenaltyRound() {
+    return processorContext.isPenaltyRound();
+  }
+
+  @Override
+  public boolean isOverRound() {
+    return activeRoundEnvironment().processingOver();
   }
 }

@@ -2,6 +2,7 @@ package tech.intellispaces.commons.annotation.processor;
 
 import javax.annotation.processing.RoundEnvironment;
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 public interface ArtifactGeneratorContext {
 
@@ -12,4 +13,10 @@ public interface ArtifactGeneratorContext {
   boolean isProcessingFinished(String sourceArtifactName, Class<? extends Annotation> annotation);
 
   boolean isGenerated(String generatedArtifactName);
+
+  List<ArtifactGenerator> generatorQueue();
+
+  boolean isPenaltyRound();
+
+  boolean isOverRound();
 }

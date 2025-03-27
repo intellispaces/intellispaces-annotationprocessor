@@ -25,14 +25,18 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * The processor of annotated class, interface, record, enum or annotation artifacts.
+ * The annotated artifact processor.
+ * <p>
+ * This annotation processor precessed annotated class, interface, record, enum and annotation artifacts.
  */
-public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
+public abstract class ArtifactProcessor extends AbstractProcessor {
   private final Class<? extends Annotation> annotation;
   private final Set<ElementKind> applicableKinds;
   private final SourceVersion sourceVersion;
 
-  public AnnotatedArtifactProcessor(
+  private static final ArtifactProcessorContext CONTEXT = new ArtifactProcessorContext();
+
+  public ArtifactProcessor(
       ElementKind applicableKind,
       Class<? extends Annotation> annotation,
       SourceVersion sourceVersion
@@ -40,7 +44,7 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
     this(Set.of(applicableKind), annotation, sourceVersion);
   }
 
-  public AnnotatedArtifactProcessor(
+  public ArtifactProcessor(
       Set<ElementKind> applicableKinds,
       Class<? extends Annotation> annotation,
       SourceVersion sourceVersion
@@ -91,12 +95,32 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
       }
     }
 
-    runGenerators();
+    int numberGeneratedArtifacts = runGenerators();
+    if (numberGeneratedArtifacts > 0) {
+      CONTEXT.setPenaltyRound(false);
+    } else if (CONTEXT.numberTasks() > 0 && !CONTEXT.isPenaltyRound()) {
+      Optional<ArtifactGenerator> generator = penaltyRoundArtifactGenerator();
+      if (generator.isPresent()) {
+        try {
+          var ctx = new ArtifactGeneratorContextImpl(CONTEXT);
+          Artifact artifact = generator.get().generate(ctx).orElseThrow();
+          writeArtifact(null, artifact);
+          CONTEXT.setPenaltyRound(true);
+          return true;
+        } catch (Exception e) {
+          logErrorWhileWritingArtifact(null, e);
+        }
+      }
+    }
 
-    if (isLastRound(roundEnvironment)) {
-      checkRemainingGenerators();
+    if (isOverRound(roundEnvironment)) {
+      checkNumberTasks();
     }
     return true;
+  }
+
+  protected Optional<ArtifactGenerator> penaltyRoundArtifactGenerator() {
+    return Optional.empty();
   }
 
   private void processAnnotatedElement(TypeElement annotatedElement) {
@@ -127,7 +151,8 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
     CONTEXT.addTasks(source, annotation, tasks);
   }
 
-  private void runGenerators() {
+  private int runGenerators() {
+    int numberGeneratedArtifacts = 0;
     boolean anyTaskExecuted = false;
     Iterator<GenerationTask> iterator = CONTEXT.allTasks().iterator();
     while (iterator.hasNext()) {
@@ -136,7 +161,9 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
       var context = (ArtifactGeneratorContextImpl) task.context();
       if (generator.isRelevant(context)) {
         iterator.remove();
-        runGenerator(task);
+        if (runGenerator(task)) {
+          numberGeneratedArtifacts++;
+        }
         CONTEXT.finishTask(task);
         anyTaskExecuted = true;
       }
@@ -144,16 +171,17 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
 
     // Re-run remaining generators, as the context may have changed
     if (anyTaskExecuted) {
-      runGenerators();
+      numberGeneratedArtifacts += runGenerators();
     }
+    return numberGeneratedArtifacts;
   }
 
-  private void runGenerator(GenerationTask task) {
+  private boolean runGenerator(GenerationTask task) {
     ArtifactGenerator generator = task.generator();
     if (CONTEXT.isAlreadyGenerated(generator.generatedArtifactName())) {
       log(Diagnostic.Kind.NOTE, task.source(), "Artifact %s has already been generated before",
           generator.generatedArtifactName());
-      return;
+      return false;
     }
 
     final Optional<Artifact> generatedArtifact;
@@ -162,16 +190,18 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
       generatedArtifact = generator.generate(task.context());
     } catch (Exception e) {
       logErrorWhileGeneratingArtifact(task.source(), generator, e);
-      return;
+      return false;
     }
 
     if (generatedArtifact.isPresent()) {
       try {
         writeArtifact(task.source(), generatedArtifact.get());
+        return true;
       } catch (Exception e) {
         logErrorWhileWritingArtifact(task.source(), e);
       }
     }
+    return false;
   }
 
   private void writeArtifact(CustomType source, Artifact artifact) throws IOException {
@@ -189,11 +219,11 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
     }
   }
 
-  private boolean isLastRound(RoundEnvironment roundEnvironment) {
+  private boolean isOverRound(RoundEnvironment roundEnvironment) {
     return roundEnvironment.processingOver();
   }
 
-  private void checkRemainingGenerators() {
+  private void checkNumberTasks() {
     if (CONTEXT.numberTasks() > 0) {
       var sb = new StringBuilder();
       CONTEXT.allTasks().forEach(t -> sb
@@ -211,7 +241,8 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
   }
 
   protected void log(Diagnostic.Kind level, CustomType source, String message, Object... messageArguments) {
-    var fullMessage = "Generate an artifact(s) for class " + source.canonicalName() +
+    var fullMessage = "Generate an artifact(s) for class " +
+        (source != null ? source.canonicalName() : "<undefined>") +
         " marked with an annotation @" +  annotation.getSimpleName() + ". " +
         message.formatted(messageArguments);
     log(level, fullMessage);
@@ -244,8 +275,6 @@ public abstract class AnnotatedArtifactProcessor extends AbstractProcessor {
     e.printStackTrace(new PrintWriter(sw));
     logError(source, sw.toString());
   }
-
-  private static final ProcessorContext CONTEXT = new ProcessorContext();
 
   private static final Set<ElementKind> ALLOWABLE_ELEMENT_KINDS = Set.of(
       ElementKind.CLASS,
