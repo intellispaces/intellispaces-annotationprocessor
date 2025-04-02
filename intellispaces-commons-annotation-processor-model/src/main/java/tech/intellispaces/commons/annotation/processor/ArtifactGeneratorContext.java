@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ArtifactGeneratorContext {
 
+  List<RoundEnvironment> roundEnvironments();
+
   RoundEnvironment initialRoundEnvironment();
 
   RoundEnvironment activeRoundEnvironment();

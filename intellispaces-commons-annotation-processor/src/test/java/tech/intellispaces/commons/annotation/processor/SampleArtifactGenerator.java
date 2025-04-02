@@ -13,6 +13,11 @@ public class SampleArtifactGenerator extends TemplatedArtifactGenerator {
   }
 
   @Override
+  protected ArtifactType generatedArtifactType() {
+    return ArtifactTypes.JavaFile;
+  }
+
+  @Override
   public String generatedArtifactName() {
     return artifactName;
   }

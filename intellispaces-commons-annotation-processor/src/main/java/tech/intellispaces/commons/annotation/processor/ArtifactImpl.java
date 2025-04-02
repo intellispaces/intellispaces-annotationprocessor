@@ -1,6 +1,7 @@
 package tech.intellispaces.commons.annotation.processor;
 
-record ArtifactImpl(
+public record ArtifactImpl(
+    ArtifactType type,
     String name,
     char[] chars
 ) implements Artifact {

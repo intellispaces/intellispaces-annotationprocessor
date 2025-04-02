@@ -27,6 +27,18 @@ public abstract class TemplatedArtifactGenerator implements ArtifactGenerator {
   }
 
   /**
+   * The source artifact.
+   */
+  public CustomType sourceArtifact() {
+    return sourceArtifact;
+  }
+
+  /**
+   * The generated artifact type.
+   */
+  protected abstract ArtifactType generatedArtifactType();
+
+  /**
    * The template name.
    */
   protected abstract String templateName();
@@ -43,11 +55,6 @@ public abstract class TemplatedArtifactGenerator implements ArtifactGenerator {
   protected abstract boolean analyzeSourceArtifact(ArtifactGeneratorContext context);
 
   @Override
-  public CustomType sourceArtifact() {
-    return sourceArtifact;
-  }
-
-  @Override
   public Optional<Artifact> generate(ArtifactGeneratorContext context) throws Exception {
     if (LOG.isTraceEnabled()) {
       LOG.trace("Process class {} to generate class {}. Annotation processor generator {}",
@@ -58,7 +65,7 @@ public abstract class TemplatedArtifactGenerator implements ArtifactGenerator {
       return Optional.empty();
     }
     char[] source = synthesizeArtifact();
-    return Optional.of(new ArtifactImpl(generatedArtifactName(), source));
+    return Optional.of(new ArtifactImpl(generatedArtifactType(), generatedArtifactName(), source));
   }
 
   private char[] synthesizeArtifact() throws Exception {

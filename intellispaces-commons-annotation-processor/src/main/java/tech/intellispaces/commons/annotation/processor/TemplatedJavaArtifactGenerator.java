@@ -28,6 +28,11 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
     addImport(Generated.class);
   }
 
+  @Override
+  protected ArtifactType generatedArtifactType() {
+    return ArtifactTypes.JavaFile;
+  }
+
   public void addHiddenImport(String canonicalName) {
     imports.addHidden(canonicalName);
   }

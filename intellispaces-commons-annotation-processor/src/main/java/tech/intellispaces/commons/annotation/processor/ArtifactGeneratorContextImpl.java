@@ -14,6 +14,11 @@ class ArtifactGeneratorContextImpl implements ArtifactGeneratorContext {
   }
 
   @Override
+  public List<RoundEnvironment> roundEnvironments() {
+    return processorContext.roundEnvironments();
+  }
+
+  @Override
   public RoundEnvironment initialRoundEnvironment() {
     return processorContext.roundEnvironments().get(0);
   }

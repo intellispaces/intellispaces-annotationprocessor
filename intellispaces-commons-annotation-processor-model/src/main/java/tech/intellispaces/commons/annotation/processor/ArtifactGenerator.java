@@ -1,18 +1,11 @@
 package tech.intellispaces.commons.annotation.processor;
 
-import tech.intellispaces.commons.reflection.customtype.CustomType;
-
 import java.util.Optional;
 
 /**
  * The one-time artifact generator.
  */
 public interface ArtifactGenerator {
-
-  /**
-   * The source artifact.
-   */
-  CustomType sourceArtifact();
 
   /**
    * The full qualified name of the expected generated artifact.

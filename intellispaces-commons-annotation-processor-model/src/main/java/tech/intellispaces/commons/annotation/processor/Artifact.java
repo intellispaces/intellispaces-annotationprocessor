@@ -6,6 +6,11 @@ package tech.intellispaces.commons.annotation.processor;
 public interface Artifact {
 
   /**
+   * The artifact type.
+   */
+  ArtifactType type();
+
+  /**
    * The full qualified artifact name.
    */
   String name();

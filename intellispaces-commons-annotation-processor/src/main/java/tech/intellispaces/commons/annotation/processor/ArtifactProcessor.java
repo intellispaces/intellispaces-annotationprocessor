@@ -1,5 +1,6 @@
 package tech.intellispaces.commons.annotation.processor;
 
+import tech.intellispaces.commons.exception.NotImplementedExceptions;
 import tech.intellispaces.commons.exception.UnexpectedExceptions;
 import tech.intellispaces.commons.reflection.JavaStatements;
 import tech.intellispaces.commons.reflection.customtype.CustomType;
@@ -13,7 +14,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -206,12 +209,36 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   private void writeArtifact(CustomType source, Artifact artifact) throws IOException {
     processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Write auto generated file " + artifact.name());
-    Filer filer = processingEnv.getFiler();
+    if (ArtifactTypes.JavaFile.equals(artifact.type())) {
+      writeJavaArtifact(source, artifact);
+    } else if (ArtifactTypes.ResourceFile.equals(artifact.type())) {
+      writeResourceArtifact(source, artifact);
+    } else {
+      throw NotImplementedExceptions.withCode("rNvg0S23");
+    }
+  }
+
+  private void writeJavaArtifact(CustomType source, Artifact artifact) throws IOException {
     JavaFileObject fileObject;
     try {
+      Filer filer = processingEnv.getFiler();
       fileObject = filer.createSourceFile(artifact.name());
     } catch (FilerException e) {
-      logMandatoryWarning(source, "Failed to write generated artifact file. " + e.getMessage());
+      logMandatoryWarning(source, "Failed to write generated Java source artifact. " + e.getMessage());
+      return;
+    }
+    try (var writer = fileObject.openWriter()) {
+      writer.write(artifact.chars());
+    }
+  }
+
+  private void writeResourceArtifact(CustomType source, Artifact artifact) throws IOException {
+    FileObject fileObject;
+    try {
+      Filer filer = processingEnv.getFiler();
+      fileObject = filer.createResource(StandardLocation.CLASS_OUTPUT, "", artifact.name());
+    } catch (FilerException e) {
+      logMandatoryWarning(source, "Failed to write generated resource artifact. " + e.getMessage());
       return;
     }
     try (var writer = fileObject.openWriter()) {
