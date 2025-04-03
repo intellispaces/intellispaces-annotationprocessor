@@ -34,9 +34,9 @@ public abstract class TemplatedArtifactGenerator implements ArtifactGenerator {
   }
 
   /**
-   * The generated artifact type.
+   * The generated artifact kind.
    */
-  protected abstract ArtifactType generatedArtifactType();
+  protected abstract ArtifactKind generatedArtifactKind();
 
   /**
    * The template name.
@@ -65,7 +65,7 @@ public abstract class TemplatedArtifactGenerator implements ArtifactGenerator {
       return Optional.empty();
     }
     char[] source = synthesizeArtifact();
-    return Optional.of(new ArtifactImpl(generatedArtifactType(), generatedArtifactName(), source));
+    return Optional.of(new ArtifactImpl(generatedArtifactKind(), generatedArtifactName(), source));
   }
 
   private char[] synthesizeArtifact() throws Exception {

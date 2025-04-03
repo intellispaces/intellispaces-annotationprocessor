@@ -13,8 +13,8 @@ public class SampleArtifactGenerator extends TemplatedArtifactGenerator {
   }
 
   @Override
-  protected ArtifactType generatedArtifactType() {
-    return ArtifactTypes.JavaFile;
+  protected ArtifactKind generatedArtifactKind() {
+    return ArtifactKinds.JavaFile;
   }
 
   @Override

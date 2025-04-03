@@ -29,8 +29,8 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
   }
 
   @Override
-  protected ArtifactType generatedArtifactType() {
-    return ArtifactTypes.JavaFile;
+  protected ArtifactKind generatedArtifactKind() {
+    return ArtifactKinds.JavaFile;
   }
 
   public void addHiddenImport(String canonicalName) {

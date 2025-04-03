@@ -8,7 +8,7 @@ public interface Artifact {
   /**
    * The artifact type.
    */
-  ArtifactType type();
+  ArtifactKind type();
 
   /**
    * The full qualified artifact name.

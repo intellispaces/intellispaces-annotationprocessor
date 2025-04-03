@@ -209,9 +209,9 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   private void writeArtifact(CustomType source, Artifact artifact) throws IOException {
     processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Write auto generated file " + artifact.name());
-    if (ArtifactTypes.JavaFile.equals(artifact.type())) {
+    if (ArtifactKinds.JavaFile.equals(artifact.type())) {
       writeJavaArtifact(source, artifact);
-    } else if (ArtifactTypes.ResourceFile.equals(artifact.type())) {
+    } else if (ArtifactKinds.ResourceFile.equals(artifact.type())) {
       writeResourceArtifact(source, artifact);
     } else {
       throw NotImplementedExceptions.withCode("rNvg0S23");

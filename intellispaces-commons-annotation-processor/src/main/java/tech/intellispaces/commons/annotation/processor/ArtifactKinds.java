@@ -1,6 +1,6 @@
 package tech.intellispaces.commons.annotation.processor;
 
-public enum ArtifactTypes implements ArtifactType {
+public enum ArtifactKinds implements ArtifactKind {
 
   JavaFile,
 

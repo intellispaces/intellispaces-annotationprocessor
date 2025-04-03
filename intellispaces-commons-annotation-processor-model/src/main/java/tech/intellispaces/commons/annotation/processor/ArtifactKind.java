@@ -1,6 +1,6 @@
 package tech.intellispaces.commons.annotation.processor;
 
-public interface ArtifactType {
+public interface ArtifactKind {
 
   String name();
 }
