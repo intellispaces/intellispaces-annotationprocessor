@@ -41,11 +41,10 @@ class ArtifactProcessorContext {
   }
 
   public void addTasks(CustomType source, Class<? extends Annotation> annotation, List<GenerationTask> tasks) {
+    Map<Class<? extends Annotation>, AnnotatedTypeProcessingContext> annotationToContextIndex = artifactStatuses.computeIfAbsent(
+        source.canonicalName(), k -> new HashMap<>());
     var artifactProcessingContext = new AnnotatedTypeProcessingContext(source, annotation, tasks);
-    Map<Class<? extends Annotation>, AnnotatedTypeProcessingContext> annotationToContextIndex = new HashMap<>();
     annotationToContextIndex.put(annotation, artifactProcessingContext);
-    artifactStatuses.put(source.canonicalName(), annotationToContextIndex);
-
     this.tasks.addAll(tasks);
   }
 
