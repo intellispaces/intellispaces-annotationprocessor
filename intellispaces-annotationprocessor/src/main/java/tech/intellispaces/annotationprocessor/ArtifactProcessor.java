@@ -106,19 +106,20 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     }
 
     int numberGeneratedArtifacts = runGenerators();
+    if (numberGeneratedArtifacts > 0) {
+      prepareNotPenaltyRound();
+    } else if (needPenaltyRound()) {
+      preparePenaltyRound();
+      return true;
+    }
     if (isOverRound(roundEnvironment)) {
       checkNumberTasks();
-    }
-    if (needPenaltyRound(numberGeneratedArtifacts)) {
-      preparePenaltyRound();
-    } else {
-      prepareNotPenaltyRound();
     }
     return true;
   }
 
-  private boolean needPenaltyRound(int numberGeneratedArtifacts) {
-    return (numberGeneratedArtifacts == 0 && CONTEXT.numberTasks() > 0 && !CONTEXT.isPenaltyRound());
+  private boolean needPenaltyRound() {
+    return (CONTEXT.numberTasks() > 0 && !CONTEXT.isPenaltyRound());
   }
 
   private void preparePenaltyRound() {
