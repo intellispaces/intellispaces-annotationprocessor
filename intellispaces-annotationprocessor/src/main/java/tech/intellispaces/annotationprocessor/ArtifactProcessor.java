@@ -95,7 +95,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     } else if (!CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
       logInfo("Current round is finally over round");
     } else if (CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
-      logWarn("Current round is penalty and finally over round. Results of the penalty round can be ignored");
+      logWarn("Current round is penalty and finally over round. Results of this round can be ignored");
     }
 
     CONTEXT.roundEnvironments().add(roundEnvironment);
@@ -106,11 +106,9 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     }
 
     int numberGeneratedArtifacts = runGenerators();
-
     if (isOverRound(roundEnvironment)) {
       checkNumberTasks();
     }
-
     if (needPenaltyRound(numberGeneratedArtifacts)) {
       preparePenaltyRound();
     } else {
