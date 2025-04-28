@@ -1,8 +1,8 @@
 package tech.intellispaces.annotationprocessor;
 
-import tech.intellispaces.reflection.customtype.CustomType;
-
 import java.lang.annotation.Annotation;
+
+import tech.intellispaces.reflection.customtype.CustomType;
 
 /**
  * The task to generate new artifact.

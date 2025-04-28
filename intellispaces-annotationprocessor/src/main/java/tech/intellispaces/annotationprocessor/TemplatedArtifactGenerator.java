@@ -1,17 +1,18 @@
 package tech.intellispaces.annotationprocessor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import tech.intellispaces.commons.exception.UnexpectedExceptions;
 import tech.intellispaces.commons.function.Functions;
 import tech.intellispaces.commons.resource.ResourceFunctions;
 import tech.intellispaces.reflection.customtype.CustomType;
 import tech.intellispaces.templateengine.TemplateEngine;
 import tech.intellispaces.templateengine.template.Template;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * The template based artifact generator.

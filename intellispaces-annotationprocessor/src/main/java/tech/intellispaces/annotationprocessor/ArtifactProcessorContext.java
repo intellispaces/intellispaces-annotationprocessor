@@ -1,8 +1,5 @@
 package tech.intellispaces.annotationprocessor;
 
-import tech.intellispaces.reflection.customtype.CustomType;
-
-import javax.annotation.processing.RoundEnvironment;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.processing.RoundEnvironment;
+
+import tech.intellispaces.reflection.customtype.CustomType;
 
 class ArtifactProcessorContext {
   private final List<RoundEnvironment> roundEnvironments = new ArrayList<>();

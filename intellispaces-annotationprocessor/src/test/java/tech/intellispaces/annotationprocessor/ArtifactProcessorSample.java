@@ -1,11 +1,11 @@
 package tech.intellispaces.annotationprocessor;
 
-import tech.intellispaces.reflection.customtype.CustomType;
-
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.ElementKind;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.ElementKind;
+
+import tech.intellispaces.reflection.customtype.CustomType;
 
 public class ArtifactProcessorSample extends ArtifactProcessor {
 

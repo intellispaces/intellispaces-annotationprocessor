@@ -1,10 +1,13 @@
 package tech.intellispaces.annotationprocessor;
 
-import tech.intellispaces.commons.exception.NotImplementedExceptions;
-import tech.intellispaces.commons.exception.UnexpectedExceptions;
-import tech.intellispaces.reflection.JavaStatements;
-import tech.intellispaces.reflection.customtype.CustomType;
-
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.annotation.Annotation;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
@@ -17,15 +20,11 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import tech.intellispaces.commons.exception.NotImplementedExceptions;
+import tech.intellispaces.commons.exception.UnexpectedExceptions;
+import tech.intellispaces.reflection.JavaStatements;
+import tech.intellispaces.reflection.customtype.CustomType;
 
 /**
  * The annotated artifact processor.
@@ -90,8 +89,16 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
-    CONTEXT.roundEnvironments().add(roundEnvironment);
+    logInfo("Run annotation processor round #" + CONTEXT.roundEnvironments().size());
+    if (CONTEXT.isPenaltyRound() && !isOverRound(roundEnvironment)) {
+      logInfo("Current round is penalty round");
+    } else if (!CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
+      logInfo("Current round is finally over round");
+    } else if (CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
+      logWarn("Current round is penalty and finally over round. Results of the penalty round can be ignored");
+    }
 
+    CONTEXT.roundEnvironments().add(roundEnvironment);
     for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(annotation)) {
       if (applicableKinds.contains(annotatedElement.getKind())) {
         processAnnotatedElement((TypeElement) annotatedElement);
@@ -99,27 +106,39 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     }
 
     int numberGeneratedArtifacts = runGenerators();
-    if (numberGeneratedArtifacts > 0) {
-      CONTEXT.setPenaltyRound(false);
-    } else if (CONTEXT.numberTasks() > 0 && !CONTEXT.isPenaltyRound()) {
-      Optional<ArtifactGenerator> generator = penaltyRoundArtifactGenerator();
-      if (generator.isPresent()) {
-        try {
-          var ctx = new ArtifactGeneratorContextImpl(CONTEXT);
-          Artifact artifact = generator.get().generate(ctx).orElseThrow();
-          writeArtifact(null, artifact);
-          CONTEXT.setPenaltyRound(true);
-          return true;
-        } catch (Exception e) {
-          logErrorWhileWritingArtifact(null, e);
-        }
-      }
-    }
 
     if (isOverRound(roundEnvironment)) {
       checkNumberTasks();
     }
+
+    if (needPenaltyRound(numberGeneratedArtifacts)) {
+      preparePenaltyRound();
+    } else {
+      prepareNotPenaltyRound();
+    }
     return true;
+  }
+
+  private boolean needPenaltyRound(int numberGeneratedArtifacts) {
+    return (numberGeneratedArtifacts == 0 && CONTEXT.numberTasks() > 0 && !CONTEXT.isPenaltyRound());
+  }
+
+  private void preparePenaltyRound() {
+    Optional<ArtifactGenerator> generator = penaltyRoundArtifactGenerator();
+    if (generator.isPresent()) {
+      try {
+        var ctx = new ArtifactGeneratorContextImpl(CONTEXT);
+        Artifact artifact = generator.get().generate(ctx).orElseThrow();
+        writeArtifact(null, artifact);
+        CONTEXT.setPenaltyRound(true);
+      } catch (Exception e) {
+        logErrorWhileWritingArtifact(null, e);
+      }
+    }
+  }
+
+  private void prepareNotPenaltyRound() {
+    CONTEXT.setPenaltyRound(false);
   }
 
   protected Optional<ArtifactGenerator> penaltyRoundArtifactGenerator() {
@@ -138,7 +157,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
         validator.validate(source);
       }
 
-      log(Diagnostic.Kind.NOTE, "Create new artifact generators for origin artifact %s", source.canonicalName());
+      logInfo("Create new artifact generators for origin artifact %s", source.canonicalName());
       createGenerators(source);
     } catch (Exception e) {
       logError(source, e);
@@ -182,14 +201,13 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
   private boolean runGenerator(GenerationTask task) {
     ArtifactGenerator generator = task.generator();
     if (CONTEXT.isAlreadyGenerated(generator.generatedArtifactName())) {
-      log(Diagnostic.Kind.NOTE, task.source(), "Artifact %s has already been generated before",
-          generator.generatedArtifactName());
+      logWarn(task.source(), "Artifact %s has already been generated before", generator.generatedArtifactName());
       return false;
     }
 
     final Optional<Artifact> generatedArtifact;
     try {
-      log(Diagnostic.Kind.NOTE, "Start to generate artifact %s", generator.generatedArtifactName());
+      logInfo("Start to generate artifact %s", generator.generatedArtifactName());
       generatedArtifact = generator.generate(task.context());
     } catch (Exception e) {
       logErrorWhileGeneratingArtifact(task.source(), generator, e);
@@ -208,7 +226,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
   }
 
   private void writeArtifact(CustomType source, Artifact artifact) throws IOException {
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Write auto generated file " + artifact.name());
+    logInfo("Write auto generated file " + artifact.name());
     if (ArtifactKinds.JavaFile.equals(artifact.type())) {
       writeJavaArtifact(source, artifact);
     } else if (ArtifactKinds.ResourceFile.equals(artifact.type())) {
@@ -224,7 +242,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
       Filer filer = processingEnv.getFiler();
       fileObject = filer.createSourceFile(artifact.name());
     } catch (FilerException e) {
-      logMandatoryWarning(source, "Failed to write generated Java source artifact. " + e.getMessage());
+      logWarn(source, "Failed to write generated Java source artifact. " + e.getMessage());
       return;
     }
     try (var writer = fileObject.openWriter()) {
@@ -238,7 +256,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
       Filer filer = processingEnv.getFiler();
       fileObject = filer.createResource(StandardLocation.CLASS_OUTPUT, "", artifact.name());
     } catch (FilerException e) {
-      logMandatoryWarning(source, "Failed to write generated resource artifact. " + e.getMessage());
+      logWarn(source, "Failed to write generated resource artifact. " + e.getMessage());
       return;
     }
     try (var writer = fileObject.openWriter()) {
@@ -258,12 +276,12 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
           .append(". Generated artifact ").append(t.generator().generatedArtifactName())
           .append("\n")
       );
-      log(Diagnostic.Kind.ERROR, "There are still not run generators: " + sb);
+      logError("There are still not run generators: " + sb);
     }
   }
 
   protected void log(Diagnostic.Kind level, String message, Object... messageArguments) {
-    var fullMessage = "[" + new Date() + "] " + message.formatted(messageArguments);
+    var fullMessage = message.formatted(messageArguments) + "\n";
     processingEnv.getMessager().printMessage(level, fullMessage);
   }
 
@@ -271,12 +289,24 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     var fullMessage = "Generate an artifact(s) for class " +
         (source != null ? source.canonicalName() : "<undefined>") +
         " marked with an annotation @" +  annotation.getSimpleName() + ". " +
-        message.formatted(messageArguments);
+        message.formatted(messageArguments) + "\n";
     log(level, fullMessage);
   }
 
-  protected void logMandatoryWarning(CustomType source, String message, Object... messageArguments) {
+  protected void logInfo(String message, Object... messageArguments) {
+    log(Diagnostic.Kind.NOTE, message, messageArguments);
+  }
+
+  protected void logWarn(String message, Object... messageArguments) {
+    log(Diagnostic.Kind.MANDATORY_WARNING, message, messageArguments);
+  }
+
+  protected void logWarn(CustomType source, String message, Object... messageArguments) {
     log(Diagnostic.Kind.MANDATORY_WARNING, source, message, messageArguments);
+  }
+
+  protected void logError(String message, Object... messageArguments) {
+    log(Diagnostic.Kind.ERROR, message, messageArguments);
   }
 
   protected void logError(CustomType source, String message, Object... messageArguments) {
@@ -291,7 +321,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   protected void logErrorWhileGeneratingArtifact(CustomType source, ArtifactGenerator task, Exception e) {
     var sw = new StringWriter();
-    sw.write("Artifact generator " + task.getClass().getCanonicalName() + ".\n");
+    sw.write("Artifact generator " + task.getClass().getCanonicalName());
     e.printStackTrace(new PrintWriter(sw));
     logError(source, sw.toString());
   }
