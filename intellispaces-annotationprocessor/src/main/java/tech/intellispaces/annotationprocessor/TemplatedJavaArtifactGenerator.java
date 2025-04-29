@@ -33,10 +33,6 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
     return ArtifactKinds.JavaFile;
   }
 
-  public void addImpliedImport(String canonicalName) {
-    imports.addImplied(canonicalName);
-  }
-
   public void addImport(Class<?> aClass) {
     imports.add(aClass);
   }
