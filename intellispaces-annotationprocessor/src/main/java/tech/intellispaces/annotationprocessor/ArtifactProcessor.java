@@ -89,15 +89,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
-    logInfo("Run annotation processor round #" + CONTEXT.roundEnvironments().size());
-    if (CONTEXT.isPenaltyRound() && !isOverRound(roundEnvironment)) {
-      logInfo("Current round is penalty round");
-    } else if (!CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
-      logInfo("Current round is finally over round");
-    } else if (CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
-      logWarn("Current round is penalty and finally over round. Results of this round can be ignored");
-    }
-
+    logRoundStart(roundEnvironment);
     CONTEXT.roundEnvironments().add(roundEnvironment);
     for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(annotation)) {
       if (applicableKinds.contains(annotatedElement.getKind())) {
@@ -269,14 +261,39 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   private void checkNumberTasks() {
     if (CONTEXT.numberTasks() > 0) {
-      var sb = new StringBuilder();
-      CONTEXT.allTasks().forEach(t -> sb
-          .append("Generator ").append(t.generator().getClass().getCanonicalName())
-          .append(". Generated artifact ").append(t.generator().generatedArtifactName())
-          .append("\n")
-      );
-      logError("There are still not run generators: " + sb);
+      logUnfinishedTasks();
     }
+  }
+
+  private void logRoundStart(RoundEnvironment roundEnvironment) {
+    var sb = new StringBuilder();
+    sb.append("Run annotation processor round #").append(CONTEXT.roundEnvironments().size());
+    sb.append(". Annotation ").append(annotation.getCanonicalName());
+    if (roundEnvironment.errorRaised()) {
+      sb.append(". The error was found in the previous round. Check the previous messages");
+    }
+    if (CONTEXT.isPenaltyRound() && !isOverRound(roundEnvironment)) {
+      sb.append(". Current round is penalty round");
+    } else if (!CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
+      sb.append(". Current round is finally over round");
+    } else if (CONTEXT.isPenaltyRound() && isOverRound(roundEnvironment)) {
+      sb.append(". Current round is penalty and finally over round. Results of this round can be ignored");
+    }
+    if (roundEnvironment.errorRaised()) {
+      logError(sb.toString());
+    } else {
+      logInfo(sb.toString());
+    }
+  }
+
+  private void logUnfinishedTasks() {
+    var sb = new StringBuilder();
+    CONTEXT.allTasks().forEach(t -> sb
+            .append("Generator ").append(t.generator().getClass().getCanonicalName())
+            .append(". Generated artifact ").append(t.generator().generatedArtifactName())
+            .append("\n")
+    );
+    logError("There are still not run generators: " + sb);
   }
 
   protected void log(Diagnostic.Kind level, String message, Object... messageArguments) {
