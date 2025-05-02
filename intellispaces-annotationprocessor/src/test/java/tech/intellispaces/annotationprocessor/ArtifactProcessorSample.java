@@ -5,7 +5,7 @@ import java.util.Set;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 
-import tech.intellispaces.reflection.customtype.CustomType;
+import tech.intellispaces.statementsj.customtype.CustomType;
 
 public class ArtifactProcessorSample extends ArtifactProcessor {
 

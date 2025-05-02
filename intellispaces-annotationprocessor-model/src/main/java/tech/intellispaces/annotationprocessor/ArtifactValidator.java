@@ -1,6 +1,6 @@
 package tech.intellispaces.annotationprocessor;
 
-import tech.intellispaces.reflection.customtype.CustomType;
+import tech.intellispaces.statementsj.customtype.CustomType;
 
 /**
  * The source artifact validator.

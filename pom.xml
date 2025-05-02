@@ -30,7 +30,7 @@
             </dependency>
             <dependency>
                 <groupId>tech.intellispaces</groupId>
-                <artifactId>intellispaces-reflection</artifactId>
+                <artifactId>intellispaces-statementsj</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

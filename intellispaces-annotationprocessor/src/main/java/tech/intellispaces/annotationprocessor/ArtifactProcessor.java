@@ -23,8 +23,8 @@ import javax.tools.StandardLocation;
 
 import tech.intellispaces.commons.exception.NotImplementedExceptions;
 import tech.intellispaces.commons.exception.UnexpectedExceptions;
-import tech.intellispaces.reflection.JavaStatements;
-import tech.intellispaces.reflection.customtype.CustomType;
+import tech.intellispaces.statementsj.JavaStatements;
+import tech.intellispaces.statementsj.customtype.CustomType;
 
 /**
  * The annotated artifact processor.
