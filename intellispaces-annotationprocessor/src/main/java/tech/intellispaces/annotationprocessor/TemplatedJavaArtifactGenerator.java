@@ -12,14 +12,14 @@ import java.util.function.Consumer;
 import tech.intellispaces.commons.type.ClassFunctions;
 import tech.intellispaces.commons.type.ClassNameFunctions;
 import tech.intellispaces.statementsj.customtype.CustomType;
-import tech.intellispaces.statementsj.customtype.ImportLists;
-import tech.intellispaces.statementsj.customtype.MutableImportList;
+import tech.intellispaces.statementsj.dependencies.DependencySets;
+import tech.intellispaces.statementsj.dependencies.MutableDependencySet;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGenerator {
   private final Set<String> staticImports = new HashSet<>();
-  private final MutableImportList imports = ImportLists.get(this::generatedArtifactName);
+  private final MutableDependencySet imports = DependencySets.get(this::generatedArtifactName);
   private final List<String> javaDocLines = new ArrayList<>();
   private final Map<String, Object> templateVariables = new HashMap<>();
 
