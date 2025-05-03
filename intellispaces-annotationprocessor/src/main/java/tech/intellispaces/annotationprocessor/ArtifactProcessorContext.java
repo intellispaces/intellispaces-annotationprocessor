@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
 
-import tech.intellispaces.statementsj.customtype.CustomType;
+import tech.intellispaces.jstatements.customtype.CustomType;
 
 class ArtifactProcessorContext {
   private final List<RoundEnvironment> roundEnvironments = new ArrayList<>();

@@ -11,9 +11,9 @@ import java.util.function.Consumer;
 
 import tech.intellispaces.commons.type.ClassFunctions;
 import tech.intellispaces.commons.type.ClassNameFunctions;
-import tech.intellispaces.statementsj.customtype.CustomType;
-import tech.intellispaces.statementsj.dependencies.DependencySets;
-import tech.intellispaces.statementsj.dependencies.MutableDependencySet;
+import tech.intellispaces.jstatements.customtype.CustomType;
+import tech.intellispaces.jstatements.dependencies.DependencySets;
+import tech.intellispaces.jstatements.dependencies.MutableDependencySet;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 

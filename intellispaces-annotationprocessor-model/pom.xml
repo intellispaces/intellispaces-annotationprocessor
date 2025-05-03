@@ -7,7 +7,7 @@
     </description>
 
     <parent>
-        <groupId>tech.intellispaces</groupId>
+        <groupId>tech.intellispaces.commons</groupId>
         <artifactId>intellispaces-annotationprocessor-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -30,12 +30,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>tech.intellispaces</groupId>
+            <groupId>tech.intellispaces.commons</groupId>
             <artifactId>intellispaces-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>tech.intellispaces</groupId>
-            <artifactId>intellispaces-statementsj</artifactId>
+            <groupId>tech.intellispaces.commons</groupId>
+            <artifactId>intellispaces-jstatements</artifactId>
         </dependency>
     </dependencies>
 </project>
