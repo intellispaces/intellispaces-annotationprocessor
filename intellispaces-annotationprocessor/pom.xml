@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>tech.intellispaces.commons</groupId>
-            <artifactId>intellispaces-jstatements</artifactId>
+            <artifactId>intellispaces-javareflection</artifactId>
         </dependency>
         <dependency>
             <groupId>tech.intellispaces.commons</groupId>

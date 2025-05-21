@@ -1,10 +1,10 @@
 package tech.intellispaces.annotationprocessor;
 
+import tech.intellispaces.commons.collection.CollectionFunctions;
+
+import javax.annotation.processing.RoundEnvironment;
 import java.lang.annotation.Annotation;
 import java.util.List;
-import javax.annotation.processing.RoundEnvironment;
-
-import tech.intellispaces.commons.collection.CollectionFunctions;
 
 class ArtifactGeneratorContextImpl implements ArtifactGeneratorContext {
   private final ArtifactProcessorContext processorContext;

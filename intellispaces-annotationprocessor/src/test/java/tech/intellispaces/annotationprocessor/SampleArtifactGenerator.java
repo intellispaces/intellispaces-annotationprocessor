@@ -1,8 +1,8 @@
 package tech.intellispaces.annotationprocessor;
 
-import java.util.Map;
+import tech.intellispaces.javareflection.customtype.CustomType;
 
-import tech.intellispaces.jstatements.customtype.CustomType;
+import java.util.Map;
 
 public class SampleArtifactGenerator extends TemplatedArtifactGenerator {
   private String sourceClassName;

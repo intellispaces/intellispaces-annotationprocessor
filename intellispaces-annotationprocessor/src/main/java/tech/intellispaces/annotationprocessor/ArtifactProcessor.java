@@ -1,13 +1,10 @@
 package tech.intellispaces.annotationprocessor;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import tech.intellispaces.commons.exception.NotImplementedExceptions;
+import tech.intellispaces.commons.exception.UnexpectedExceptions;
+import tech.intellispaces.javareflection.JavaStatements;
+import tech.intellispaces.javareflection.customtype.CustomType;
+
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
@@ -20,11 +17,14 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
-
-import tech.intellispaces.commons.exception.NotImplementedExceptions;
-import tech.intellispaces.commons.exception.UnexpectedExceptions;
-import tech.intellispaces.jstatements.JavaStatements;
-import tech.intellispaces.jstatements.customtype.CustomType;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.annotation.Annotation;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * The annotated artifact processor.

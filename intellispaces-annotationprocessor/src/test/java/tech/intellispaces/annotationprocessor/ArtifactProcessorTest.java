@@ -1,15 +1,14 @@
 package tech.intellispaces.annotationprocessor;
 
-import java.nio.charset.StandardCharsets;
-import javax.tools.JavaFileObject;
-
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
-
 import tech.intellispaces.commons.resource.ResourceFunctions;
+
+import javax.tools.JavaFileObject;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Tests for {@link ArtifactProcessor}.
