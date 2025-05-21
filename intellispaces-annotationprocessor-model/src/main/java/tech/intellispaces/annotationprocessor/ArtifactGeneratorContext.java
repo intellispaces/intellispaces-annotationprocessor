@@ -1,8 +1,8 @@
 package tech.intellispaces.annotationprocessor;
 
-import javax.annotation.processing.RoundEnvironment;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import javax.annotation.processing.RoundEnvironment;
 
 public interface ArtifactGeneratorContext {
 

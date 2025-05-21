@@ -1,11 +1,5 @@
 package tech.intellispaces.annotationprocessor;
 
-import tech.intellispaces.commons.type.ClassFunctions;
-import tech.intellispaces.commons.type.ClassNameFunctions;
-import tech.intellispaces.javareflection.customtype.CustomType;
-import tech.intellispaces.javareflection.dependencies.DependencySets;
-import tech.intellispaces.javareflection.dependencies.MutableDependencySet;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import tech.intellispaces.commons.type.ClassFunctions;
+import tech.intellispaces.commons.type.ClassNameFunctions;
+import tech.intellispaces.javareflection.customtype.CustomType;
+import tech.intellispaces.javareflection.dependencies.DependencySets;
+import tech.intellispaces.javareflection.dependencies.MutableDependencySet;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
