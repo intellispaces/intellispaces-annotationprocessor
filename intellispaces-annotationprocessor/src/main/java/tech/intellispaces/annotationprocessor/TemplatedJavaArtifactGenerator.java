@@ -98,10 +98,7 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
   }
 
   public String sourceArtifactSimpleName() {
-    if (sourceArtifact().isNested()) {
-      return simpleNameOf(sourceArtifactName());
-    }
-    return sourceArtifact().simpleName();
+    return addImportAndGetSimpleName(sourceArtifactName());
   }
 
   public String sourceArtifactPackageName() {

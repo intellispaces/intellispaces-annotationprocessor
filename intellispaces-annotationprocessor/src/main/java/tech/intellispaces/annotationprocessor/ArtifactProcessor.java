@@ -332,12 +332,12 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
   protected void logError(CustomType source, Exception ex) {
     var sw = new StringWriter();
     ex.printStackTrace(new PrintWriter(sw));
-    logError(source, sw.toString());
+    logError(source, " Error: " + sw);
   }
 
   protected void logErrorWhileGeneratingArtifact(CustomType source, ArtifactGenerator task, Exception e) {
     var sw = new StringWriter();
-    sw.write("Artifact generator " + task.getClass().getCanonicalName());
+    sw.write("Artifact generator " + task.getClass().getCanonicalName() + ": ");
     e.printStackTrace(new PrintWriter(sw));
     logError(source, sw.toString());
   }
@@ -346,7 +346,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     var sw = new StringWriter();
     sw.write("Could not write artifact.\n");
     e.printStackTrace(new PrintWriter(sw));
-    logError(source, sw.toString());
+    logError(source, " Error: " + sw);
   }
 
   private static final Set<ElementKind> ALLOWABLE_ELEMENT_KINDS = Set.of(
