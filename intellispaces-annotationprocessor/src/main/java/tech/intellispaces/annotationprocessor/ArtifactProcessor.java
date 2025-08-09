@@ -6,8 +6,10 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
@@ -32,32 +34,39 @@ import tech.intellispaces.javareflection.customtype.CustomType;
  * This annotation processor precessed annotated class, interface, record, enum and annotation artifacts.
  */
 public abstract class ArtifactProcessor extends AbstractProcessor {
-  private final Class<? extends Annotation> annotation;
-  private final Set<ElementKind> applicableKinds;
+  private final Map<Class<? extends Annotation>, Set<ElementKind>> annotationApplicableKinds;
   private final SourceVersion sourceVersion;
 
   private static final ArtifactProcessorContext CONTEXT = new ArtifactProcessorContext();
 
   public ArtifactProcessor(
-      ElementKind applicableKind,
       Class<? extends Annotation> annotation,
+      ElementKind applicableKind,
       SourceVersion sourceVersion
   ) {
-    this(Set.of(applicableKind), annotation, sourceVersion);
+    this(annotation, Set.of(applicableKind), sourceVersion);
   }
 
   public ArtifactProcessor(
-      Set<ElementKind> applicableKinds,
       Class<? extends Annotation> annotation,
+      Set<ElementKind> applicableKinds,
       SourceVersion sourceVersion
   ) {
-    for (ElementKind elementKind : applicableKinds) {
-      if (!ALLOWABLE_ELEMENT_KINDS.contains(elementKind)) {
-        throw UnexpectedExceptions.withMessage("Unsupported element kind {0}", elementKind);
+    this(Map.of(annotation, applicableKinds), sourceVersion);
+  }
+
+  public ArtifactProcessor(
+      Map<Class<? extends Annotation>, Set<ElementKind>> annotationApplicableKinds,
+      SourceVersion sourceVersion
+  ) {
+    for (Set<ElementKind> elementKinds : annotationApplicableKinds.values()) {
+      for (ElementKind elementKind : elementKinds) {
+        if (!ALLOWABLE_ELEMENT_KINDS.contains(elementKind)) {
+          throw UnexpectedExceptions.withMessage("Unsupported element kind {0}", elementKind);
+        }
       }
     }
-    this.applicableKinds = applicableKinds;
-    this.annotation = annotation;
+    this.annotationApplicableKinds = annotationApplicableKinds;
     this.sourceVersion = sourceVersion;
   }
 
@@ -77,6 +86,16 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
    */
   public abstract List<ArtifactGenerator> makeGenerators(CustomType source, ArtifactGeneratorContext context);
 
+  /**
+   * The method is called for each annotated type before processing starts.
+   *
+   * @param annotatedType the annotated type.
+   * @param annotation the annotation.
+   */
+  protected void trigger(CustomType annotatedType, Class<? extends Annotation> annotation) {
+    // do nothing
+  }
+
   @Override
   public SourceVersion getSupportedSourceVersion() {
     return sourceVersion;
@@ -84,16 +103,23 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   @Override
   public final Set<String> getSupportedAnnotationTypes() {
-    return Set.of(annotation.getName());
+    return annotationApplicableKinds.keySet().stream()
+        .map(Class::getName)
+        .collect(Collectors.toSet());
   }
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
     logRoundStart(roundEnvironment);
+    CONTEXT.setProcessingEnv(processingEnv);
     CONTEXT.roundEnvironments().add(roundEnvironment);
-    for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(annotation)) {
-      if (applicableKinds.contains(annotatedElement.getKind())) {
-        processAnnotatedElement((TypeElement) annotatedElement);
+    for (Map.Entry<Class<? extends Annotation>, Set<ElementKind>> entry : annotationApplicableKinds.entrySet()) {
+      Class<? extends Annotation> annotation = entry.getKey();
+      Set<ElementKind> applicableKinds = entry.getValue();
+      for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(annotation)) {
+        if (applicableKinds.contains(annotatedElement.getKind())) {
+          processAnnotatedElement((TypeElement) annotatedElement, annotation);
+        }
       }
     }
 
@@ -102,12 +128,12 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
       prepareNotPenaltyRound();
     } else if (needPenaltyRound()) {
       preparePenaltyRound();
-      return true;
+      return false;
     }
     if (isOverRound(roundEnvironment)) {
       checkNumberTasks();
     }
-    return true;
+    return false;
   }
 
   private boolean needPenaltyRound() {
@@ -136,26 +162,27 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
     return Optional.empty();
   }
 
-  private void processAnnotatedElement(TypeElement annotatedElement) {
-    CustomType source = JavaStatements.customTypeStatement(annotatedElement);
+  private void processAnnotatedElement(TypeElement annotatedElement, Class<? extends Annotation> annotation) {
+    CustomType annotatedType = JavaStatements.customTypeStatement(annotatedElement);
+    trigger(annotatedType, annotation);
     try {
-      if (!isApplicable(source)) {
+      if (!isApplicable(annotatedType)) {
         return;
       }
 
       ArtifactValidator validator = validator();
       if (validator != null) {
-        validator.validate(source);
+        validator.validate(annotatedType);
       }
 
-      logInfo("Create new artifact generators for origin artifact %s", source.canonicalName());
-      createGenerators(source);
+      logInfo("Create new artifact generators for origin artifact %s", annotatedType.canonicalName());
+      createGenerators(annotatedType, annotation);
     } catch (Exception e) {
-      logError(source, e);
+      logError(annotatedType, e);
     }
   }
 
-  private void createGenerators(CustomType source) {
+  private void createGenerators(CustomType source, Class<? extends Annotation> annotation) {
     var context = new ArtifactGeneratorContextImpl(CONTEXT);
     List<ArtifactGenerator> generators = makeGenerators(source, context);
     List<GenerationTask> tasks = generators.stream()
@@ -268,7 +295,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
   private void logRoundStart(RoundEnvironment roundEnvironment) {
     var sb = new StringBuilder();
     sb.append("Run annotation processor round #").append(CONTEXT.roundEnvironments().size());
-    sb.append(". Annotation ").append(annotation.getCanonicalName());
+    sb.append(". Annotation(s): ").append(getSupportedAnnotationTypes());
     if (roundEnvironment.errorRaised()) {
       sb.append(". The error was found in the previous round. Check the previous messages");
     }
@@ -303,8 +330,7 @@ public abstract class ArtifactProcessor extends AbstractProcessor {
 
   protected void log(Diagnostic.Kind level, CustomType source, String message, Object... messageArguments) {
     var fullMessage = "Generate an artifact(s) for class " +
-        (source != null ? source.canonicalName() : "<undefined>") +
-        " marked with an annotation @" +  annotation.getSimpleName() + ". " +
+        (source != null ? source.canonicalName() : "<undefined>") + ". " +
         message.formatted(messageArguments) + "\n";
     log(level, fullMessage);
   }

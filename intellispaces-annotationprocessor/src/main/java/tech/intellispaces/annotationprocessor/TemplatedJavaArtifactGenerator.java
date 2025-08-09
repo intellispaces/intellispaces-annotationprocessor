@@ -83,7 +83,7 @@ public abstract class TemplatedJavaArtifactGenerator extends TemplatedArtifactGe
     templateVariables.put("sourceArtifactSimpleName", sourceArtifactSimpleName());
     templateVariables.put("sourceArtifactPackageName", sourceArtifactPackageName());
 
-    templateVariables.put("generatedArtifactName", generatedArtifactName());
+    templateVariables.put("generatedArtifactName", this.generatedArtifactName());
     templateVariables.put("generatedArtifactSimpleName", generatedArtifactSimpleName());
     templateVariables.put("generatedArtifactPackageName", generatedArtifactPackageName());
 

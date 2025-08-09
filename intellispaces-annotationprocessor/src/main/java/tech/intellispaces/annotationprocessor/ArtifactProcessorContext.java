@@ -7,11 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 
 import tech.intellispaces.javareflection.customtype.CustomType;
 
 class ArtifactProcessorContext {
+  private ProcessingEnvironment processingEnv;
   private final List<RoundEnvironment> roundEnvironments = new ArrayList<>();
   private final List<GenerationTask> tasks = new ArrayList<>();
   private final Set<String> generatedArtifacts = new HashSet<>();
@@ -76,6 +78,14 @@ class ArtifactProcessorContext {
       return false;
     }
     return (annotatedTypeProcessingContext.processedTasks() == annotatedTypeProcessingContext.tasks().size());
+  }
+
+  public ProcessingEnvironment processingEnv() {
+    return processingEnv;
+  }
+
+  void setProcessingEnv(ProcessingEnvironment processingEnv) {
+    this.processingEnv = processingEnv;
   }
 
   private static final class AnnotatedTypeProcessingContext {

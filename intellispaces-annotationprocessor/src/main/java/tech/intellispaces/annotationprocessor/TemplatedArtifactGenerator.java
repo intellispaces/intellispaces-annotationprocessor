@@ -58,8 +58,8 @@ public abstract class TemplatedArtifactGenerator implements ArtifactGenerator {
   @Override
   public Optional<Artifact> generate(ArtifactGeneratorContext context) throws Exception {
     if (LOG.isTraceEnabled()) {
-      LOG.trace("Process class {} to generate class {}. Annotation processor generator {}",
-          sourceArtifact.canonicalName(), generatedArtifactName(), this.getClass().getSimpleName()
+      LOG.trace("Process class {} to generate {}. Annotation processor generator {}",
+          sourceArtifact.canonicalName(), this.generatedArtifactName(), this.getClass().getSimpleName()
       );
     }
     if (!analyzeSourceArtifact(context)) {

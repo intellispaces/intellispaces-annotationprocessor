@@ -1,8 +1,12 @@
 package tech.intellispaces.annotationprocessor;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.processing.RoundEnvironment;
+import javax.tools.FileObject;
+import javax.tools.JavaFileManager;
 
 import tech.intellispaces.commons.collection.CollectionFunctions;
 
@@ -53,5 +57,14 @@ class ArtifactGeneratorContextImpl implements ArtifactGeneratorContext {
   @Override
   public boolean isOverRound() {
     return activeRoundEnvironment().processingOver();
+  }
+
+  @Override
+  public Optional<FileObject> getFile(JavaFileManager.Location location, String relativeName) {
+    try {
+      return Optional.of(processorContext.processingEnv().getFiler().getResource(location, "", relativeName));
+    } catch (IOException e) {
+      return Optional.empty();
+    }
   }
 }

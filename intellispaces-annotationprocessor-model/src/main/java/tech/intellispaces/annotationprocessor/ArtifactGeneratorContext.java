@@ -2,7 +2,10 @@ package tech.intellispaces.annotationprocessor;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.processing.RoundEnvironment;
+import javax.tools.FileObject;
+import javax.tools.JavaFileManager;
 
 public interface ArtifactGeneratorContext {
 
@@ -21,4 +24,6 @@ public interface ArtifactGeneratorContext {
   boolean isPenaltyRound();
 
   boolean isOverRound();
+
+  Optional<FileObject> getFile(JavaFileManager.Location location, String relativeName);
 }
